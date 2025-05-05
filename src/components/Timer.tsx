@@ -13,6 +13,7 @@ interface TimerProps {
   onComplete: () => void;
   onStop: () => void;
   onPauseToggle: () => void;
+  onTimeAdjust?: (seconds: number) => void;
 }
 
 const Timer: React.FC<TimerProps> = ({
@@ -24,7 +25,8 @@ const Timer: React.FC<TimerProps> = ({
   totalIntervals,
   onComplete,
   onStop,
-  onPauseToggle
+  onPauseToggle,
+  onTimeAdjust
 }) => {
   const [timeLeft, setTimeLeft] = useState(initialSeconds);
   const [dashOffset, setDashOffset] = useState(0);
@@ -96,6 +98,11 @@ const Timer: React.FC<TimerProps> = ({
       const newTime = Math.max(1, prevTime + seconds);
       return newTime;
     });
+    
+    // Notify parent component about time adjustment
+    if (onTimeAdjust) {
+      onTimeAdjust(seconds);
+    }
   };
 
   const skipToNextInterval = () => {

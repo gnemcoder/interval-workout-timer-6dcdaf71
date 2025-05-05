@@ -15,6 +15,9 @@ const Index = () => {
     togglePause,
     resetSession,
     getTotalTime,
+    getRunTime,
+    getRestTime,
+    updateActualTime,
   } = useInterval();
 
   return (
@@ -46,6 +49,7 @@ const Index = () => {
             onComplete={completeInterval}
             onStop={stopSession}
             onPauseToggle={togglePause}
+            onTimeAdjust={updateActualTime}
           />
         </div>
       )}
@@ -56,6 +60,8 @@ const Index = () => {
           restMinutes={state.restSeconds / 60}
           iterations={state.iterations}
           totalTime={getTotalTime()}
+          actualRunTime={getRunTime()}
+          actualRestTime={getRestTime()}
           onReset={resetSession}
         />
       )}

@@ -11,6 +11,8 @@ interface IntervalState {
   iterations: number;
   initialSeconds: number;
   isComplete: boolean;
+  actualRunSeconds: number;
+  actualRestSeconds: number;
 }
 
 export const useInterval = () => {
@@ -24,6 +26,8 @@ export const useInterval = () => {
     iterations: 0,
     initialSeconds: 0,
     isComplete: false,
+    actualRunSeconds: 0,
+    actualRestSeconds: 0,
   });
 
   const startSession = (runMinutes: number, restMinutes: number, iterations: number) => {
@@ -40,13 +44,20 @@ export const useInterval = () => {
       iterations,
       initialSeconds: runSeconds,
       isComplete: false,
+      actualRunSeconds: 0,
+      actualRestSeconds: 0,
     });
   };
 
   const completeInterval = () => {
     setState(prevState => {
+      // Calculate the actual time spent in current interval
+      const currentIntervalTime = prevState.initialSeconds;
+      
       if (prevState.isRest) {
         // Just finished a rest interval
+        const newActualRestSeconds = prevState.actualRestSeconds + currentIntervalTime;
+        
         if (prevState.currentInterval < prevState.iterations) {
           // Start next run interval
           return {
@@ -54,6 +65,7 @@ export const useInterval = () => {
             isRest: false,
             currentInterval: prevState.currentInterval + 1,
             initialSeconds: prevState.runSeconds,
+            actualRestSeconds: newActualRestSeconds,
           };
         } else {
           // Session complete
@@ -61,14 +73,18 @@ export const useInterval = () => {
             ...prevState,
             isRunning: false,
             isComplete: true,
+            actualRestSeconds: newActualRestSeconds,
           };
         }
       } else {
         // Just finished a run interval, start rest
+        const newActualRunSeconds = prevState.actualRunSeconds + currentIntervalTime;
+        
         return {
           ...prevState,
           isRest: true,
           initialSeconds: prevState.restSeconds,
+          actualRunSeconds: newActualRunSeconds,
         };
       }
     });
@@ -101,13 +117,30 @@ export const useInterval = () => {
       iterations: 0,
       initialSeconds: 0,
       isComplete: false,
+      actualRunSeconds: 0,
+      actualRestSeconds: 0,
     });
   };
 
+  const updateActualTime = (seconds: number) => {
+    setState(prevState => ({
+      ...prevState,
+      // Add time to the appropriate category based on current state
+      actualRunSeconds: prevState.isRest ? prevState.actualRunSeconds : prevState.actualRunSeconds + seconds,
+      actualRestSeconds: prevState.isRest ? prevState.actualRestSeconds + seconds : prevState.actualRestSeconds,
+    }));
+  };
+
   const getTotalTime = (): number => {
-    const runTime = (state.runSeconds / 60) * state.iterations;
-    const restTime = (state.restSeconds / 60) * (state.iterations - 1);
-    return runTime + restTime;
+    return (state.actualRunSeconds + state.actualRestSeconds) / 60;
+  };
+
+  const getRunTime = (): number => {
+    return state.actualRunSeconds / 60;
+  };
+
+  const getRestTime = (): number => {
+    return state.actualRestSeconds / 60;
   };
 
   return {
@@ -117,6 +150,9 @@ export const useInterval = () => {
     stopSession,
     togglePause,
     resetSession,
+    updateActualTime,
     getTotalTime,
+    getRunTime,
+    getRestTime,
   };
 };

@@ -8,6 +8,8 @@ interface SessionSummaryProps {
   restMinutes: number;
   iterations: number;
   totalTime: number;
+  actualRunTime: number;
+  actualRestTime: number;
   onReset: () => void;
 }
 
@@ -16,6 +18,8 @@ const SessionSummary: React.FC<SessionSummaryProps> = ({
   restMinutes,
   iterations,
   totalTime,
+  actualRunTime,
+  actualRestTime,
   onReset
 }) => {
   // Format total time
@@ -51,9 +55,19 @@ const SessionSummary: React.FC<SessionSummaryProps> = ({
             <span className="text-white font-medium">{iterations}</span>
           </div>
           
-          <div className="pt-2 border-t border-spotify-gray flex justify-between">
+          <div className="pt-2 mt-2 border-t border-spotify-gray flex justify-between">
+            <span className="text-spotify-lightgray">Actual Run Time:</span>
+            <span className="text-spotify-green font-semibold">{formatTime(actualRunTime)}</span>
+          </div>
+          
+          <div className="flex justify-between">
+            <span className="text-spotify-lightgray">Actual Rest Time:</span>
+            <span className="text-blue-400 font-semibold">{formatTime(actualRestTime)}</span>
+          </div>
+          
+          <div className="pt-2 mt-2 border-t border-spotify-gray flex justify-between">
             <span className="text-spotify-lightgray">Total Time:</span>
-            <span className="text-spotify-green font-semibold">{formatTime(totalTime)}</span>
+            <span className="text-white font-semibold">{formatTime(totalTime)}</span>
           </div>
         </div>
       </div>
