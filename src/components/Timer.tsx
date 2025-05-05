@@ -1,6 +1,6 @@
 
 import { useEffect, useState, useRef } from 'react';
-import { Play, Pause, Square } from 'lucide-react';
+import { Play, Pause, Square, Plus, Minus, SkipForward } from 'lucide-react';
 import { Button } from "@/components/ui/button";
 
 interface TimerProps {
@@ -89,6 +89,20 @@ const Timer: React.FC<TimerProps> = ({
     return `${mins}:${secs < 10 ? '0' : ''}${secs}`;
   };
 
+  const adjustTime = (seconds: number) => {
+    if (!isRunning || isPaused) return;
+    
+    setTimeLeft((prevTime) => {
+      const newTime = Math.max(1, prevTime + seconds);
+      return newTime;
+    });
+  };
+
+  const skipToNextInterval = () => {
+    if (!isRunning || isPaused) return;
+    onComplete();
+  };
+
   const activityType = isRest ? 'Rest' : 'Run';
   const colorClass = isRest ? 'text-blue-400' : 'text-spotify-green';
   const ringColorClass = isRest ? 'stroke-blue-400' : 'stroke-spotify-green';
@@ -133,18 +147,43 @@ const Timer: React.FC<TimerProps> = ({
         </div>
       </div>
 
-      <div className="flex space-x-4">
+      <div className="flex flex-col space-y-4 items-center">
+        <div className="flex space-x-2">
+          <Button
+            onClick={() => adjustTime(-15)}
+            className="bg-purple-700 hover:bg-purple-800 text-white rounded-full w-12 h-12 flex items-center justify-center"
+          >
+            <Minus size={20} />
+          </Button>
+
+          <Button
+            onClick={onPauseToggle}
+            className="bg-spotify-gray hover:bg-spotify-gray/80 text-white rounded-full w-12 h-12 flex items-center justify-center"
+          >
+            {isPaused ? <Play size={20} /> : <Pause size={20} />}
+          </Button>
+
+          <Button
+            onClick={onStop}
+            className="bg-red-500 hover:bg-red-600 text-white rounded-full w-12 h-12 flex items-center justify-center"
+          >
+            <Square size={20} />
+          </Button>
+
+          <Button
+            onClick={() => adjustTime(15)}
+            className="bg-purple-700 hover:bg-purple-800 text-white rounded-full w-12 h-12 flex items-center justify-center"
+          >
+            <Plus size={20} />
+          </Button>
+        </div>
+
         <Button
-          onClick={onPauseToggle}
-          className="bg-spotify-gray hover:bg-spotify-gray/80 text-white rounded-full w-12 h-12 flex items-center justify-center"
+          onClick={skipToNextInterval}
+          className="bg-spotify-darkgray hover:bg-spotify-darkgray/80 text-white px-4 py-2 rounded-md flex items-center justify-center gap-2"
         >
-          {isPaused ? <Play size={20} /> : <Pause size={20} />}
-        </Button>
-        <Button
-          onClick={onStop}
-          className="bg-red-500 hover:bg-red-600 text-white rounded-full w-12 h-12 flex items-center justify-center"
-        >
-          <Square size={20} />
+          <SkipForward size={16} />
+          <span>Skip to Next</span>
         </Button>
       </div>
     </div>
