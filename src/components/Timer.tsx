@@ -1,5 +1,6 @@
+
 import { useEffect, useState, useRef } from 'react';
-import { Play, Pause, Square, Plus, Minus, SkipForward } from 'lucide-react';
+import { Play, Pause, Square, SkipForward } from 'lucide-react';
 import { Button } from "@/components/ui/button";
 
 interface TimerProps {
@@ -162,18 +163,23 @@ const Timer: React.FC<TimerProps> = ({
             <Square size={20} />
           </Button>
 
+          {/* New styled time adjustment buttons */}
           <Button
             onClick={() => adjustTime(-15)}
-            className="bg-purple-700 hover:bg-purple-800 text-white rounded-full w-12 h-12 flex items-center justify-center"
+            className="bg-gradient-to-r from-purple-700 to-purple-500 hover:opacity-90 text-white rounded-full w-12 h-12 flex items-center justify-center relative overflow-hidden group"
           >
-            <Minus size={20} />
+            <div className="absolute inset-0 flex items-center justify-center">
+              <span className="font-bold text-sm">-15</span>
+            </div>
           </Button>
 
           <Button
             onClick={() => adjustTime(15)}
-            className="bg-purple-700 hover:bg-purple-800 text-white rounded-full w-12 h-12 flex items-center justify-center"
+            className="bg-gradient-to-r from-purple-500 to-purple-700 hover:opacity-90 text-white rounded-full w-12 h-12 flex items-center justify-center relative overflow-hidden group"
           >
-            <Plus size={20} />
+            <div className="absolute inset-0 flex items-center justify-center">
+              <span className="font-bold text-sm">+15</span>
+            </div>
           </Button>
         </div>
 

@@ -33,6 +33,7 @@ export default {
 					black: '#121212',
 					darkblack: '#090909',
 					gray: '#282828',
+					darkgray: '#1A1A1A',
 					lightgray: '#B3B3B3',
 				},
 				primary: {
