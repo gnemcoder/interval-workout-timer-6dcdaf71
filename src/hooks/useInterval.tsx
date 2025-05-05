@@ -59,8 +59,9 @@ export const useInterval = () => {
 
   const completeInterval = () => {
     setState(prevState => {
-      // Calculate the actual time spent in current interval (in seconds)
-      const elapsedSeconds = prevState.initialSeconds - prevState.currentIntervalElapsed;
+      // Only count the time actually spent in the current interval
+      // This will be the elapsed time when manually skipping, or the full interval otherwise
+      const elapsedSeconds = prevState.currentIntervalElapsed;
       
       if (prevState.isRest) {
         // Just finished a rest interval
