@@ -14,6 +14,7 @@ interface TimerProps {
   onStop: () => void;
   onPauseToggle: () => void;
   onTimeAdjust?: (seconds: number) => void;
+  onTimeUpdate?: (seconds: number) => void;
 }
 
 const Timer: React.FC<TimerProps> = ({
@@ -26,7 +27,8 @@ const Timer: React.FC<TimerProps> = ({
   onComplete,
   onStop,
   onPauseToggle,
-  onTimeAdjust
+  onTimeAdjust,
+  onTimeUpdate
 }) => {
   const [timeLeft, setTimeLeft] = useState(initialSeconds);
   const [dashOffset, setDashOffset] = useState(0);
@@ -66,6 +68,12 @@ const Timer: React.FC<TimerProps> = ({
             setTimeout(() => onComplete(), 1000);
             return 0;
           }
+          
+          // Update the elapsed time in the parent component
+          if (onTimeUpdate) {
+            onTimeUpdate(1); // 1 second has passed
+          }
+          
           return prevTime - 1;
         });
       }, 1000);
@@ -76,7 +84,7 @@ const Timer: React.FC<TimerProps> = ({
         clearInterval(intervalRef.current);
       }
     };
-  }, [isRunning, isPaused, onComplete, isRest, initialSeconds]);
+  }, [isRunning, isPaused, onComplete, onTimeUpdate, isRest, initialSeconds]);
 
   useEffect(() => {
     if (isRunning) {

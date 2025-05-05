@@ -22,15 +22,16 @@ const SessionSummary: React.FC<SessionSummaryProps> = ({
   actualRestTime,
   onReset
 }) => {
-  // Format total time
+  // Format time in minutes and seconds
   const formatTime = (minutes: number): string => {
-    const hrs = Math.floor(minutes / 60);
-    const mins = Math.floor(minutes % 60);
+    const totalSeconds = Math.round(minutes * 60);
+    const mins = Math.floor(totalSeconds / 60);
+    const secs = totalSeconds % 60;
     
-    if (hrs > 0) {
-      return `${hrs}h ${mins}m`;
+    if (mins > 0) {
+      return `${mins}m ${secs}s`;
     } else {
-      return `${mins} minutes`;
+      return `${secs} seconds`;
     }
   };
 

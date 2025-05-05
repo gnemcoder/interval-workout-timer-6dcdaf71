@@ -1,5 +1,5 @@
 
-import { useState } from 'react';
+import { useState, useRef } from 'react';
 
 interface IntervalState {
   isRunning: boolean;
@@ -13,6 +13,7 @@ interface IntervalState {
   isComplete: boolean;
   actualRunSeconds: number;
   actualRestSeconds: number;
+  currentIntervalElapsed: number; // Track elapsed time in current interval
 }
 
 export const useInterval = () => {
@@ -28,7 +29,11 @@ export const useInterval = () => {
     isComplete: false,
     actualRunSeconds: 0,
     actualRestSeconds: 0,
+    currentIntervalElapsed: 0,
   });
+
+  // Use ref to track elapsed time since the last reset of the timer
+  const elapsedTimeRef = useRef<number>(0);
 
   const startSession = (runMinutes: number, restMinutes: number, iterations: number) => {
     const runSeconds = Math.round(runMinutes * 60);
@@ -46,17 +51,20 @@ export const useInterval = () => {
       isComplete: false,
       actualRunSeconds: 0,
       actualRestSeconds: 0,
+      currentIntervalElapsed: 0,
     });
+    
+    elapsedTimeRef.current = 0;
   };
 
   const completeInterval = () => {
     setState(prevState => {
-      // Calculate the actual time spent in current interval
-      const currentIntervalTime = prevState.initialSeconds;
+      // Calculate the actual time spent in current interval (in seconds)
+      const elapsedSeconds = prevState.initialSeconds - prevState.currentIntervalElapsed;
       
       if (prevState.isRest) {
         // Just finished a rest interval
-        const newActualRestSeconds = prevState.actualRestSeconds + currentIntervalTime;
+        const newActualRestSeconds = prevState.actualRestSeconds + elapsedSeconds;
         
         if (prevState.currentInterval < prevState.iterations) {
           // Start next run interval
@@ -66,6 +74,7 @@ export const useInterval = () => {
             currentInterval: prevState.currentInterval + 1,
             initialSeconds: prevState.runSeconds,
             actualRestSeconds: newActualRestSeconds,
+            currentIntervalElapsed: 0, // Reset elapsed time for new interval
           };
         } else {
           // Session complete
@@ -78,13 +87,14 @@ export const useInterval = () => {
         }
       } else {
         // Just finished a run interval, start rest
-        const newActualRunSeconds = prevState.actualRunSeconds + currentIntervalTime;
+        const newActualRunSeconds = prevState.actualRunSeconds + elapsedSeconds;
         
         return {
           ...prevState,
           isRest: true,
           initialSeconds: prevState.restSeconds,
           actualRunSeconds: newActualRunSeconds,
+          currentIntervalElapsed: 0, // Reset elapsed time for new interval
         };
       }
     });
@@ -119,7 +129,18 @@ export const useInterval = () => {
       isComplete: false,
       actualRunSeconds: 0,
       actualRestSeconds: 0,
+      currentIntervalElapsed: 0,
     });
+    
+    elapsedTimeRef.current = 0;
+  };
+
+  // Update the current interval elapsed time when time passes
+  const updateCurrentIntervalElapsed = (seconds: number) => {
+    setState(prevState => ({
+      ...prevState,
+      currentIntervalElapsed: prevState.currentIntervalElapsed + seconds,
+    }));
   };
 
   const updateActualTime = (seconds: number) => {
@@ -128,6 +149,8 @@ export const useInterval = () => {
       // Add time to the appropriate category based on current state
       actualRunSeconds: prevState.isRest ? prevState.actualRunSeconds : prevState.actualRunSeconds + seconds,
       actualRestSeconds: prevState.isRest ? prevState.actualRestSeconds + seconds : prevState.actualRestSeconds,
+      // Also update the current interval elapsed time
+      currentIntervalElapsed: Math.max(0, prevState.currentIntervalElapsed - seconds),
     }));
   };
 
@@ -151,6 +174,7 @@ export const useInterval = () => {
     togglePause,
     resetSession,
     updateActualTime,
+    updateCurrentIntervalElapsed,
     getTotalTime,
     getRunTime,
     getRestTime,

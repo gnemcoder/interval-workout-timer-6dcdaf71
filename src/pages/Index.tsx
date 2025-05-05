@@ -18,6 +18,7 @@ const Index = () => {
     getRunTime,
     getRestTime,
     updateActualTime,
+    updateCurrentIntervalElapsed,
   } = useInterval();
 
   return (
@@ -50,6 +51,7 @@ const Index = () => {
             onStop={stopSession}
             onPauseToggle={togglePause}
             onTimeAdjust={updateActualTime}
+            onTimeUpdate={updateCurrentIntervalElapsed}
           />
         </div>
       )}
