@@ -1,6 +1,6 @@
 
 import { useEffect, useState, useRef } from 'react';
-import { Play, Pause, Stop } from 'lucide-react';
+import { Play, Pause, Square } from 'lucide-react';
 import { Button } from "@/components/ui/button";
 
 interface TimerProps {
@@ -138,7 +138,7 @@ const Timer: React.FC<TimerProps> = ({
           onClick={onStop}
           className="bg-red-500 hover:bg-red-600 text-white rounded-full w-12 h-12 flex items-center justify-center"
         >
-          <Stop size={20} />
+          <Square size={20} />
         </Button>
       </div>
     </div>
