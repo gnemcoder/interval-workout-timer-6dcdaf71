@@ -1,4 +1,3 @@
-
 import { useEffect, useState, useRef } from 'react';
 import { Play, Pause, Square, Plus, Minus, SkipForward } from 'lucide-react';
 import { Button } from "@/components/ui/button";
@@ -150,13 +149,6 @@ const Timer: React.FC<TimerProps> = ({
       <div className="flex flex-col space-y-4 items-center">
         <div className="flex space-x-2">
           <Button
-            onClick={() => adjustTime(-15)}
-            className="bg-purple-700 hover:bg-purple-800 text-white rounded-full w-12 h-12 flex items-center justify-center"
-          >
-            <Minus size={20} />
-          </Button>
-
-          <Button
             onClick={onPauseToggle}
             className="bg-spotify-gray hover:bg-spotify-gray/80 text-white rounded-full w-12 h-12 flex items-center justify-center"
           >
@@ -168,6 +160,13 @@ const Timer: React.FC<TimerProps> = ({
             className="bg-red-500 hover:bg-red-600 text-white rounded-full w-12 h-12 flex items-center justify-center"
           >
             <Square size={20} />
+          </Button>
+
+          <Button
+            onClick={() => adjustTime(-15)}
+            className="bg-purple-700 hover:bg-purple-800 text-white rounded-full w-12 h-12 flex items-center justify-center"
+          >
+            <Minus size={20} />
           </Button>
 
           <Button
