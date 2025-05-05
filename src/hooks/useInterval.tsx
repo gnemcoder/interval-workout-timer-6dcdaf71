@@ -44,32 +44,34 @@ export const useInterval = () => {
   };
 
   const completeInterval = () => {
-    if (state.isRest) {
-      // Just finished a rest interval
-      if (state.currentInterval < state.iterations) {
-        // Start next run interval
-        setState(prevState => ({
-          ...prevState,
-          isRest: false,
-          currentInterval: prevState.currentInterval + 1,
-          initialSeconds: prevState.runSeconds,
-        }));
+    setState(prevState => {
+      if (prevState.isRest) {
+        // Just finished a rest interval
+        if (prevState.currentInterval < prevState.iterations) {
+          // Start next run interval
+          return {
+            ...prevState,
+            isRest: false,
+            currentInterval: prevState.currentInterval + 1,
+            initialSeconds: prevState.runSeconds,
+          };
+        } else {
+          // Session complete
+          return {
+            ...prevState,
+            isRunning: false,
+            isComplete: true,
+          };
+        }
       } else {
-        // Session complete
-        setState(prevState => ({
+        // Just finished a run interval, start rest
+        return {
           ...prevState,
-          isRunning: false,
-          isComplete: true,
-        }));
+          isRest: true,
+          initialSeconds: prevState.restSeconds,
+        };
       }
-    } else {
-      // Just finished a run interval, start rest
-      setState(prevState => ({
-        ...prevState,
-        isRest: true,
-        initialSeconds: prevState.restSeconds,
-      }));
-    }
+    });
   };
 
   const stopSession = () => {

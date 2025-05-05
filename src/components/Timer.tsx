@@ -36,15 +36,23 @@ const Timer: React.FC<TimerProps> = ({
     audioRef.current = new Audio('/beep.mp3');
   }, []);
 
+  // Reset timer when initialSeconds changes (switching between run/rest)
   useEffect(() => {
     setTimeLeft(initialSeconds);
-  }, [initialSeconds]);
+    setDashOffset(0); // Reset circle progress
+  }, [initialSeconds, isRest]);
 
   useEffect(() => {
     setDashOffset(circumference);
   }, [circumference]);
 
   useEffect(() => {
+    // Clear any existing interval first
+    if (intervalRef.current) {
+      clearInterval(intervalRef.current);
+      intervalRef.current = null;
+    }
+    
     if (isRunning && !isPaused) {
       intervalRef.current = window.setInterval(() => {
         setTimeLeft((prevTime) => {
@@ -59,8 +67,6 @@ const Timer: React.FC<TimerProps> = ({
           return prevTime - 1;
         });
       }, 1000);
-    } else if (intervalRef.current) {
-      clearInterval(intervalRef.current);
     }
     
     return () => {
@@ -68,7 +74,7 @@ const Timer: React.FC<TimerProps> = ({
         clearInterval(intervalRef.current);
       }
     };
-  }, [isRunning, isPaused, onComplete]);
+  }, [isRunning, isPaused, onComplete, isRest, initialSeconds]);
 
   useEffect(() => {
     if (isRunning) {
