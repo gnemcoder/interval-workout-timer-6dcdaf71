@@ -48,6 +48,8 @@ const Index = () => {
               onPauseToggle={togglePause}
               onTimeAdjust={updateActualTime}
               onTimeUpdate={updateCurrentIntervalElapsed}
+              runSeconds={state.runSeconds}
+              restSeconds={state.restSeconds}
             />
           </div>
         )}

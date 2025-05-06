@@ -15,6 +15,8 @@ interface TimerProps {
   onPauseToggle: () => void;
   onTimeAdjust?: (seconds: number) => void;
   onTimeUpdate?: (seconds: number) => void;
+  runSeconds?: number;
+  restSeconds?: number;
 }
 
 const Timer: React.FC<TimerProps> = ({
@@ -28,7 +30,9 @@ const Timer: React.FC<TimerProps> = ({
   onStop,
   onPauseToggle,
   onTimeAdjust,
-  onTimeUpdate
+  onTimeUpdate,
+  runSeconds = 0,
+  restSeconds = 0
 }) => {
   const [timeLeft, setTimeLeft] = useState(initialSeconds);
   const intervalRef = useRef<number | null>(null);
@@ -140,7 +144,7 @@ const Timer: React.FC<TimerProps> = ({
           </div>
           <div className="text-right">
             <span className="text-green-600 text-xl font-bold">
-              {formatTime(state.runSeconds)}
+              {formatTime(runSeconds)}
             </span>
           </div>
         </div>
@@ -159,7 +163,7 @@ const Timer: React.FC<TimerProps> = ({
           </div>
           <div className="text-right">
             <span className="text-red-500 text-xl font-bold">
-              {formatTime(state.restSeconds)}
+              {formatTime(restSeconds)}
             </span>
           </div>
         </div>
