@@ -66,6 +66,7 @@ const IntervalForm: React.FC<IntervalFormProps> = ({ onStart }) => {
               onChange={(e) => setRunMinutes(parseFloat(e.target.value))}
               className="w-20 bg-transparent text-right border-none text-[#333333] text-xl font-bold focus:ring-0"
             />
+            <span className="text-[#333333] text-xl font-bold">{formatTime(runMinutes)}</span>
           </div>
         </div>
         
@@ -89,8 +90,9 @@ const IntervalForm: React.FC<IntervalFormProps> = ({ onStart }) => {
               step="0.5"
               value={restMinutes}
               onChange={(e) => setRestMinutes(parseFloat(e.target.value))}
-              className="w-20 bg-transparent text-right border-none text-[#555555] text-xl font-bold focus:ring-0"
+              className="w-20 bg-transparent text-right border-none text-[#555555] text-xl font-bold focus:ring-0 hidden"
             />
+            <span className="text-[#555555] text-xl font-bold">{formatTime(restMinutes)}</span>
           </div>
         </div>
         
@@ -136,9 +138,9 @@ const IntervalForm: React.FC<IntervalFormProps> = ({ onStart }) => {
               max="20"
               value={iterations}
               onChange={(e) => setIterations(parseInt(e.target.value))}
-              className="w-20 bg-transparent text-right border-none text-[#555555] text-xl font-bold focus:ring-0"
+              className="w-20 bg-transparent text-right border-none text-[#555555] text-xl font-bold focus:ring-0 hidden"
             />
-            <span className="text-[#555555] text-xl font-bold">X</span>
+            <span className="text-[#555555] text-xl font-bold">{iterations}X</span>
           </div>
         </div>
       </div>
