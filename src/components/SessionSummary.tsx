@@ -37,38 +37,44 @@ const SessionSummary: React.FC<SessionSummaryProps> = ({
 
   return (
     <div className="glass-card p-6 rounded-xl space-y-6 max-w-md w-full">
-      <h2 className="text-xl font-semibold text-white text-center">Session Complete!</h2>
+      <div className="text-center">
+        <h2 className="text-xl font-semibold text-white mb-2">Session Complete!</h2>
+        <div className="text-3xl font-bold text-spotify-green mb-4">
+          {formatTime(totalTime)}
+        </div>
+      </div>
       
       <div className="space-y-4">
-        <div className="bg-spotify-darkblack rounded-lg p-4 space-y-3">
-          <div className="flex justify-between">
-            <span className="text-spotify-lightgray">Run Interval:</span>
-            <span className="text-white font-medium">{runMinutes} minutes</span>
+        {/* Run time - Light green box */}
+        <div className="bg-[#F2FCE2] rounded-lg p-4 text-spotify-black">
+          <div className="flex justify-between items-center">
+            <span className="font-medium text-spotify-black/80">Run Time</span>
+            <span className="font-semibold text-spotify-green text-lg">{formatTime(actualRunTime)}</span>
           </div>
-          
-          <div className="flex justify-between">
-            <span className="text-spotify-lightgray">Rest Interval:</span>
-            <span className="text-white font-medium">{restMinutes} minutes</span>
+          <div className="text-xs text-spotify-black/60 mt-1">
+            Target: {runMinutes} minutes per interval
           </div>
-          
-          <div className="flex justify-between">
-            <span className="text-spotify-lightgray">Iterations:</span>
-            <span className="text-white font-medium">{iterations}</span>
+        </div>
+        
+        {/* Rest time - Red box */}
+        <div className="bg-[#ea384c] rounded-lg p-4 text-white">
+          <div className="flex justify-between items-center">
+            <span className="font-medium text-white/90">Rest Time</span>
+            <span className="font-semibold text-white text-lg">{formatTime(actualRestTime)}</span>
           </div>
-          
-          <div className="pt-2 mt-2 border-t border-spotify-gray flex justify-between">
-            <span className="text-spotify-lightgray">Actual Run Time:</span>
-            <span className="text-spotify-green font-semibold">{formatTime(actualRunTime)}</span>
+          <div className="text-xs text-white/70 mt-1">
+            Target: {restMinutes} minutes per interval
           </div>
-          
-          <div className="flex justify-between">
-            <span className="text-spotify-lightgray">Actual Rest Time:</span>
-            <span className="text-blue-400 font-semibold">{formatTime(actualRestTime)}</span>
+        </div>
+        
+        {/* Intervals - Light blue box */}
+        <div className="bg-[#D3E4FD] rounded-lg p-4 text-spotify-black">
+          <div className="flex justify-between items-center">
+            <span className="font-medium text-spotify-black/80">Intervals</span>
+            <span className="font-semibold text-blue-600 text-lg">{iterations}</span>
           </div>
-          
-          <div className="pt-2 mt-2 border-t border-spotify-gray flex justify-between">
-            <span className="text-spotify-lightgray">Total Time:</span>
-            <span className="text-white font-semibold">{formatTime(totalTime)}</span>
+          <div className="text-xs text-spotify-black/60 mt-1">
+            Total cycles completed
           </div>
         </div>
       </div>
