@@ -13,6 +13,10 @@ const IntervalForm: React.FC<IntervalFormProps> = ({ onStart }) => {
   const [runMinutes, setRunMinutes] = useState<number>(5);
   const [restMinutes, setRestMinutes] = useState<number>(2);
   const [iterations, setIterations] = useState<number>(5);
+  const [isEditingRun, setIsEditingRun] = useState<boolean>(false);
+  const [isEditingRest, setIsEditingRest] = useState<boolean>(false);
+  const [runTimeInput, setRunTimeInput] = useState<string>('05:00');
+  const [restTimeInput, setRestTimeInput] = useState<string>('02:00');
   
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
@@ -24,6 +28,55 @@ const IntervalForm: React.FC<IntervalFormProps> = ({ onStart }) => {
     const mins = Math.floor(minutes);
     const secs = Math.round((minutes % 1) * 60);
     return `${String(mins).padStart(2, '0')}:${String(secs).padStart(2, '0')}`;
+  };
+
+  const handleRunTimeClick = () => {
+    setIsEditingRun(true);
+    setRunTimeInput(formatTime(runMinutes));
+  };
+
+  const handleRestTimeClick = () => {
+    setIsEditingRest(true);
+    setRestTimeInput(formatTime(restMinutes));
+  };
+
+  const handleRunTimeChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    setRunTimeInput(e.target.value);
+  };
+
+  const handleRestTimeChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    setRestTimeInput(e.target.value);
+  };
+
+  const parseTimeToMinutes = (timeStr: string): number => {
+    const parts = timeStr.split(':');
+    if (parts.length !== 2) return 5; // Default to 5 minutes if invalid format
+    
+    const mins = parseInt(parts[0], 10) || 0;
+    const secs = parseInt(parts[1], 10) || 0;
+    return mins + secs / 60;
+  };
+
+  const handleRunTimeBlur = () => {
+    const newMinutes = parseTimeToMinutes(runTimeInput);
+    setRunMinutes(newMinutes);
+    setIsEditingRun(false);
+  };
+
+  const handleRestTimeBlur = () => {
+    const newMinutes = parseTimeToMinutes(restTimeInput);
+    setRestMinutes(newMinutes);
+    setIsEditingRest(false);
+  };
+
+  const handleRunTimeSubmit = (e: React.FormEvent) => {
+    e.preventDefault();
+    handleRunTimeBlur();
+  };
+
+  const handleRestTimeSubmit = (e: React.FormEvent) => {
+    e.preventDefault();
+    handleRestTimeBlur();
   };
 
   return (
@@ -64,9 +117,28 @@ const IntervalForm: React.FC<IntervalFormProps> = ({ onStart }) => {
               step="0.5"
               value={runMinutes}
               onChange={(e) => setRunMinutes(parseFloat(e.target.value))}
-              className="w-20 bg-transparent text-right border-none text-[#333333] text-xl font-bold focus:ring-0"
+              className="w-20 bg-transparent text-right border-none text-[#333333] text-xl font-bold focus:ring-0 hidden"
             />
-            <span className="text-[#333333] text-xl font-bold">{formatTime(runMinutes)}</span>
+            {isEditingRun ? (
+              <form onSubmit={handleRunTimeSubmit}>
+                <input
+                  autoFocus
+                  type="text"
+                  value={runTimeInput}
+                  onChange={handleRunTimeChange}
+                  onBlur={handleRunTimeBlur}
+                  pattern="[0-9]{2}:[0-9]{2}"
+                  className="w-20 bg-transparent text-right border border-[#333333] text-[#333333] text-xl font-bold focus:outline-none px-1 rounded"
+                />
+              </form>
+            ) : (
+              <span 
+                className="text-[#333333] text-xl font-bold cursor-pointer" 
+                onClick={handleRunTimeClick}
+              >
+                {formatTime(runMinutes)}
+              </span>
+            )}
           </div>
         </div>
         
@@ -92,7 +164,26 @@ const IntervalForm: React.FC<IntervalFormProps> = ({ onStart }) => {
               onChange={(e) => setRestMinutes(parseFloat(e.target.value))}
               className="w-20 bg-transparent text-right border-none text-[#555555] text-xl font-bold focus:ring-0 hidden"
             />
-            <span className="text-[#555555] text-xl font-bold">{formatTime(restMinutes)}</span>
+            {isEditingRest ? (
+              <form onSubmit={handleRestTimeSubmit}>
+                <input
+                  autoFocus
+                  type="text"
+                  value={restTimeInput}
+                  onChange={handleRestTimeChange}
+                  onBlur={handleRestTimeBlur}
+                  pattern="[0-9]{2}:[0-9]{2}"
+                  className="w-20 bg-transparent text-right border border-[#555555] text-[#555555] text-xl font-bold focus:outline-none px-1 rounded"
+                />
+              </form>
+            ) : (
+              <span 
+                className="text-[#555555] text-xl font-bold cursor-pointer" 
+                onClick={handleRestTimeClick}
+              >
+                {formatTime(restMinutes)}
+              </span>
+            )}
           </div>
         </div>
         
