@@ -39,6 +39,7 @@ const Index = () => {
           const actualRestTime = getRestTime();
 
           const { error } = await supabase.from("sessions").insert({
+            user_id: user.id,
             iterations: state.iterations,
             run_seconds: state.runSeconds,
             rest_seconds: state.restSeconds,
