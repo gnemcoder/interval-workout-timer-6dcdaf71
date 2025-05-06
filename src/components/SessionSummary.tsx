@@ -44,54 +44,54 @@ const SessionSummary: React.FC<SessionSummaryProps> = ({
         
         <Button 
           onClick={onReset}
-          className="rounded-full w-20 h-20 bg-white hover:bg-white/90 text-red-500"
+          className="rounded-full w-20 h-20 bg-white hover:bg-white/90 text-spotify-green"
         >
           <Play size={32} fill="currentColor" />
         </Button>
       </div>
       
       <div className="space-y-4 mt-8">
-        {/* Work interval - Light green box */}
-        <div className="bg-[#e8f8e8] rounded-xl p-4 flex items-center">
-          <div className="bg-[#c2ecc2] rounded-full p-2 mr-4">
-            <Play size={24} className="text-green-600" />
+        {/* Work interval - Neutral gray box */}
+        <div className="bg-[#F1F1F1] rounded-xl p-4 flex items-center">
+          <div className="bg-[#DEDEDE] rounded-full p-2 mr-4">
+            <Play size={24} className="text-[#555555]" />
           </div>
           <div className="flex-grow">
-            <span className="font-medium text-gray-800">
+            <span className="font-medium text-[#333333]">
               Work
             </span>
           </div>
           <div className="text-right">
-            <span className="text-green-600 text-xl font-bold">
+            <span className="text-[#333333] text-xl font-bold">
               {formatTime(actualRunTime)}
             </span>
           </div>
         </div>
         
-        {/* Rest Time - Light red box */}
-        <div className="bg-[#ffe8e8] rounded-xl p-4 flex items-center">
-          <div className="bg-[#ffcaca] rounded-full p-2 mr-4">
+        {/* Rest Time - Neutral gray box */}
+        <div className="bg-[#F6F6F7] rounded-xl p-4 flex items-center">
+          <div className="bg-[#E5E5E5] rounded-full p-2 mr-4">
             <div className="w-6 h-6 flex items-center justify-center">
-              <div className="w-3 h-3 bg-red-500 rounded-sm"></div>
+              <div className="w-3 h-3 bg-[#555555] rounded-sm"></div>
             </div>
           </div>
           <div className="flex-grow">
-            <span className="font-medium text-gray-800">
+            <span className="font-medium text-[#333333]">
               Rest
             </span>
           </div>
           <div className="text-right">
-            <span className="text-red-500 text-xl font-bold">
+            <span className="text-[#555555] text-xl font-bold">
               {formatTime(actualRestTime)}
             </span>
           </div>
         </div>
         
-        {/* Rounds - Light blue box */}
-        <div className="bg-[#e8ecff] rounded-xl p-4 flex items-center">
-          <div className="bg-[#d0d8ff] rounded-full p-2 mr-4">
+        {/* Rounds - Neutral gray box */}
+        <div className="bg-[#EFEFEF] rounded-xl p-4 flex items-center">
+          <div className="bg-[#DDDDDD] rounded-full p-2 mr-4">
             <div className="w-6 h-6 flex items-center justify-center">
-              <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" className="text-blue-600">
+              <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" className="text-[#666666]">
                 <path d="M22 12c0 6-4.39 10-9.806 10C7.792 22 4.24 19.665 3 16"></path>
                 <path d="M2 12C2 6 6.39 2 11.806 2 16.209 2 19.76 4.335 21 8"></path>
                 <path d="M7 17l-4-1h4"></path>
@@ -100,12 +100,12 @@ const SessionSummary: React.FC<SessionSummaryProps> = ({
             </div>
           </div>
           <div className="flex-grow">
-            <span className="font-medium text-gray-800">
+            <span className="font-medium text-[#333333]">
               Rounds
             </span>
           </div>
           <div className="text-right">
-            <span className="text-blue-600 text-xl font-bold">
+            <span className="text-[#555555] text-xl font-bold">
               {iterations}X
             </span>
           </div>
