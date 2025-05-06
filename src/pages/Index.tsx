@@ -28,6 +28,45 @@ const Index = () => {
   const { user } = useAuth();
   const navigate = useNavigate();
   const [sessionSaved, setSessionSaved] = useState(false);
+  const [lastSession, setLastSession] = useState({
+    runMinutes: 5, // Default values
+    restMinutes: 2,
+    iterations: 5
+  });
+  const [isLoadingLastSession, setIsLoadingLastSession] = useState(false);
+
+  // Fetch user's last session settings
+  useEffect(() => {
+    const fetchLastSession = async () => {
+      if (!user) return;
+      
+      try {
+        setIsLoadingLastSession(true);
+        
+        const { data, error } = await supabase
+          .from("sessions")
+          .select("run_seconds, rest_seconds, iterations")
+          .order("created_at", { ascending: false })
+          .limit(1);
+
+        if (error) {
+          console.error("Error fetching last session:", error);
+        } else if (data && data.length > 0) {
+          setLastSession({
+            runMinutes: data[0].run_seconds / 60,
+            restMinutes: data[0].rest_seconds / 60,
+            iterations: data[0].iterations
+          });
+        }
+      } catch (error) {
+        console.error("Error in fetching last session:", error);
+      } finally {
+        setIsLoadingLastSession(false);
+      }
+    };
+
+    fetchLastSession();
+  }, [user]);
 
   // Save completed session to Supabase
   useEffect(() => {
@@ -78,7 +117,12 @@ const Index = () => {
       <div className="flex-1 flex flex-col items-center justify-center px-4 py-8">
         <div className="w-full max-w-md">
           {!state.isRunning && !state.isComplete && (
-            <IntervalForm onStart={(run, rest, iterations) => startSession(run, rest, iterations)} />
+            <IntervalForm 
+              onStart={(run, rest, iterations) => startSession(run, rest, iterations)} 
+              defaultRunMinutes={lastSession.runMinutes}
+              defaultRestMinutes={lastSession.restMinutes}
+              defaultRounds={lastSession.iterations}
+            />
           )}
 
           {state.isRunning && (

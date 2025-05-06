@@ -6,6 +6,9 @@ import { Input } from "@/components/ui/input";
 
 interface IntervalFormProps {
   onStart: (runMinutes: number, restMinutes: number, iterations: number) => void;
+  defaultRunMinutes?: number;
+  defaultRestMinutes?: number;
+  defaultRounds?: number;
 }
 
 // Helper function to format time in mm:ss format
@@ -23,14 +26,26 @@ const parseTime = (timeStr: string): number => {
   return minutes + seconds / 60;
 };
 
-const IntervalForm: React.FC<IntervalFormProps> = ({ onStart }) => {
-  const [runTimeStr, setRunTimeStr] = useState('05:00');
-  const [restTimeStr, setRestTimeStr] = useState('02:00');
-  const [roundsStr, setRoundsStr] = useState('5');
+const IntervalForm: React.FC<IntervalFormProps> = ({ 
+  onStart, 
+  defaultRunMinutes = 5, 
+  defaultRestMinutes = 2, 
+  defaultRounds = 5 
+}) => {
+  const [runTimeStr, setRunTimeStr] = useState(formatTime(defaultRunMinutes));
+  const [restTimeStr, setRestTimeStr] = useState(formatTime(defaultRestMinutes));
+  const [roundsStr, setRoundsStr] = useState(String(defaultRounds));
   
   const [runTime, setRunTime] = useState(parseTime(runTimeStr));
   const [restTime, setRestTime] = useState(parseTime(restTimeStr));
   const [rounds, setRounds] = useState(parseInt(roundsStr, 10) || 1);
+  
+  // Update state when default props change
+  useEffect(() => {
+    setRunTimeStr(formatTime(defaultRunMinutes));
+    setRestTimeStr(formatTime(defaultRestMinutes));
+    setRoundsStr(String(defaultRounds));
+  }, [defaultRunMinutes, defaultRestMinutes, defaultRounds]);
   
   useEffect(() => {
     setRunTime(parseTime(runTimeStr));
