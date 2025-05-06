@@ -1,6 +1,5 @@
-
 import { useState, useRef, useEffect } from 'react';
-import { playBeepSound, playWorkStartedSound, playRestStartedSound } from '../../utils/soundEffects';
+import { playBeepSound, playWorkStartedSound, playRestStartedSound } from '../../utils/sounds';
 
 interface UseTimerLogicProps {
   initialSeconds: number;
