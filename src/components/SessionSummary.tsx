@@ -1,7 +1,7 @@
 
 import React from 'react';
 import { Button } from "@/components/ui/button";
-import { Play } from "lucide-react";
+import { Play, PlusCircle } from "lucide-react";
 
 interface SessionSummaryProps {
   runMinutes: number;
@@ -74,6 +74,17 @@ const SessionSummary: React.FC<SessionSummaryProps> = ({
           <span className="text-spotify-lightgray text-lg font-medium">Rounds</span>
           <span className="text-white text-2xl font-bold">{iterations}×</span>
         </div>
+      </div>
+
+      {/* New "Start new session" button */}
+      <div className="mt-12">
+        <Button 
+          onClick={onReset}
+          className="w-full py-6 bg-spotify-green hover:bg-spotify-green/90 text-black font-medium text-lg"
+        >
+          <PlusCircle className="mr-2" />
+          Start new session
+        </Button>
       </div>
     </div>
   );
