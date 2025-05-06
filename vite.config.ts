@@ -10,14 +10,18 @@ export default defineConfig(({ mode }) => ({
     host: "::",
     port: 8080,
   },
-  base: "", // Empty string to ensure assets are loaded from the current path
+  base: '/', // Using root base path for consistent asset resolution
   build: {
     outDir: "dist",
     emptyOutDir: true, // Clean the output directory before building
-    sourcemap: true,
+    sourcemap: mode === 'development', // Only generate sourcemaps in development
+    minify: true,
     rollupOptions: {
       output: {
-        manualChunks: undefined // Disable code splitting for simpler output
+        manualChunks: undefined, // Disable code splitting for simpler output
+        entryFileNames: 'assets/[name].[hash].js',
+        chunkFileNames: 'assets/[name].[hash].js',
+        assetFileNames: 'assets/[name].[hash].[ext]'
       }
     }
   },
