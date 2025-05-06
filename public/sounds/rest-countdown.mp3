@@ -1,2 +1,4 @@
+const audio = new Audio('https://zngumulpqrukuzglevem.supabase.co/storage/v1/object/public/sounds/beep-23.mp3');
+audio.play();
 
-// This is a binary file placeholder. You need to upload an actual MP3 file here.
+
