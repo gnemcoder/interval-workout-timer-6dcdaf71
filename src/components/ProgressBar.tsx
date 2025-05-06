@@ -1,5 +1,6 @@
 
 import React from 'react';
+import { Progress } from '@/components/ui/progress';
 
 interface ProgressBarProps {
   currentInterval: number;
@@ -12,18 +13,17 @@ const ProgressBar: React.FC<ProgressBarProps> = ({ currentInterval, totalInterva
   const completionPercentage = ((currentInterval - 1) / totalIntervals) * 100;
   
   return (
-    <div className="w-full max-w-md">
-      <div className="flex justify-between text-xs text-spotify-lightgray mb-2">
+    <div className="w-full max-w-md mb-4">
+      <div className="flex justify-between text-sm text-gray-400 mb-2">
         <span>Progress</span>
         <span>{Math.round(completionPercentage)}%</span>
       </div>
-      <div className="h-1.5 w-full bg-spotify-gray rounded-full overflow-hidden">
-        <div 
-          className={`h-full ${isRest ? 'bg-blue-400' : 'bg-spotify-green'} transition-all duration-500 ease-out`}
-          style={{ width: `${completionPercentage}%` }}
-        ></div>
-      </div>
-      <div className="mt-1 text-center text-xs text-spotify-lightgray">
+      <Progress 
+        value={completionPercentage} 
+        className="h-1.5 bg-gray-700" 
+        indicatorClassName={`${isRest ? "bg-purple-500" : "bg-green-500"}`}
+      />
+      <div className="mt-1 text-center text-sm text-gray-400">
         <span>{currentInterval} of {totalIntervals} intervals</span>
       </div>
     </div>

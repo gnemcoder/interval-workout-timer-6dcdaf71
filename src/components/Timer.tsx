@@ -3,7 +3,7 @@ import React from 'react';
 import TimerHeader from './timer/TimerHeader';
 import TimerDisplay from './timer/TimerDisplay';
 import IntervalInfo from './timer/IntervalInfo';
-import TimerControls from './timer/TimerControls';
+import ProgressBar from './ProgressBar';
 import { useTimerLogic } from './timer/useTimerLogic';
 
 interface TimerProps {
@@ -52,30 +52,33 @@ const Timer: React.FC<TimerProps> = ({
   };
 
   return (
-    <div className="w-full">
+    <div className="w-full flex flex-col items-center">
       <TimerHeader />
       
-      <TimerDisplay 
-        timeLeft={timeLeft}
-        isPaused={isPaused}
-        onPauseToggle={onPauseToggle}
-      />
-      
-      <IntervalInfo
-        isRest={isRest}
-        runSeconds={runSeconds}
-        restSeconds={restSeconds}
-        currentInterval={currentInterval}
-        totalIntervals={totalIntervals}
-      />
-      
-      <TimerControls
-        isRunning={isRunning}
-        isPaused={isPaused}
-        skipToNextInterval={skipToNextInterval}
-        onStop={onStop}
-        adjustTime={adjustTime}
-      />
+      <div className="w-full max-w-lg bg-gray-900 rounded-2xl p-8 shadow-xl">
+        <ProgressBar 
+          currentInterval={currentInterval} 
+          totalIntervals={totalIntervals}
+          isRest={isRest}
+        />
+        
+        <IntervalInfo
+          isRest={isRest}
+          currentInterval={currentInterval}
+          totalIntervals={totalIntervals}
+        />
+        
+        <TimerDisplay
+          timeLeft={timeLeft}
+          isPaused={isPaused}
+          onPauseToggle={onPauseToggle}
+          skipToNextInterval={skipToNextInterval}
+          onStop={onStop}
+          adjustTime={adjustTime}
+          initialSeconds={initialSeconds}
+          isRest={isRest}
+        />
+      </div>
     </div>
   );
 };
