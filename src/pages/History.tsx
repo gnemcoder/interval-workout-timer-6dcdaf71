@@ -6,7 +6,9 @@ import { supabase } from "@/integrations/supabase/client";
 import { formatDistanceToNow } from "date-fns";
 import Header from "@/components/Header";
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@/components/ui/table";
-import { Play } from "lucide-react";
+import { Button } from "@/components/ui/button";
+import { Play, Trash2 } from "lucide-react";
+import { toast } from "sonner";
 
 interface SessionData {
   id: string;
@@ -24,6 +26,7 @@ export default function History() {
   const navigate = useNavigate();
   const [sessions, setSessions] = useState<SessionData[]>([]);
   const [isLoadingSessions, setIsLoadingSessions] = useState(true);
+  const [isDeletingSession, setIsDeletingSession] = useState<string | null>(null);
 
   useEffect(() => {
     if (!isLoading && !user) {
@@ -31,29 +34,32 @@ export default function History() {
     }
   }, [user, isLoading, navigate]);
 
-  useEffect(() => {
-    const fetchSessions = async () => {
-      if (user) {
-        try {
-          const { data, error } = await supabase
-            .from("sessions")
-            .select("*")
-            .order("created_at", { ascending: false });
+  const fetchSessions = async () => {
+    if (user) {
+      try {
+        setIsLoadingSessions(true);
+        const { data, error } = await supabase
+          .from("sessions")
+          .select("*")
+          .order("created_at", { ascending: false });
 
-          if (error) {
-            console.error("Error fetching sessions:", error);
-            return;
-          }
-
-          setSessions(data || []);
-        } catch (error) {
-          console.error("Error in sessions query:", error);
-        } finally {
-          setIsLoadingSessions(false);
+        if (error) {
+          console.error("Error fetching sessions:", error);
+          toast.error("Could not load your workout history");
+          return;
         }
-      }
-    };
 
+        setSessions(data || []);
+      } catch (error) {
+        console.error("Error in sessions query:", error);
+        toast.error("Something went wrong loading your workouts");
+      } finally {
+        setIsLoadingSessions(false);
+      }
+    }
+  };
+
+  useEffect(() => {
     fetchSessions();
   }, [user]);
 
@@ -62,6 +68,33 @@ export default function History() {
     const mins = Math.floor(seconds / 60);
     const secs = seconds % 60;
     return `${String(mins).padStart(2, '0')}:${String(secs).padStart(2, '0')}`;
+  };
+
+  const handleDeleteSession = async (sessionId: string) => {
+    if (!user) return;
+    
+    try {
+      setIsDeletingSession(sessionId);
+      const { error } = await supabase
+        .from("sessions")
+        .delete()
+        .eq("id", sessionId);
+
+      if (error) {
+        console.error("Error deleting session:", error);
+        toast.error("Failed to delete the workout session");
+        return;
+      }
+
+      // Update the local state to remove the deleted session
+      setSessions(sessions.filter(session => session.id !== sessionId));
+      toast.success("Workout session deleted");
+    } catch (error) {
+      console.error("Error in delete operation:", error);
+      toast.error("Something went wrong when deleting the session");
+    } finally {
+      setIsDeletingSession(null);
+    }
   };
 
   if (isLoading || (!user && !isLoading)) {
@@ -101,6 +134,7 @@ export default function History() {
                   <TableHead className="text-white">Total Time</TableHead>
                   <TableHead className="text-white">Work Time</TableHead>
                   <TableHead className="text-white">Rest Time</TableHead>
+                  <TableHead className="text-white w-16"></TableHead>
                 </TableRow>
               </TableHeader>
               <TableBody>
@@ -119,6 +153,18 @@ export default function History() {
                     <TableCell className="text-white">{formatTime(session.total_time)}</TableCell>
                     <TableCell className="text-white">{formatTime(session.actual_run_time)}</TableCell>
                     <TableCell className="text-white">{formatTime(session.actual_rest_time)}</TableCell>
+                    <TableCell className="text-white">
+                      <Button
+                        variant="ghost"
+                        size="icon"
+                        className="hover:bg-red-500/20 text-gray-400 hover:text-red-500"
+                        onClick={() => handleDeleteSession(session.id)}
+                        disabled={isDeletingSession === session.id}
+                      >
+                        <Trash2 size={18} />
+                        <span className="sr-only">Delete workout</span>
+                      </Button>
+                    </TableCell>
                   </TableRow>
                 ))}
               </TableBody>
