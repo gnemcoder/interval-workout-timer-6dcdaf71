@@ -27,6 +27,10 @@ export const useTimerLogic = ({
 
   useEffect(() => {
     audioRef.current = new Audio('/beep.mp3');
+    // Preload the beep sound
+    if (audioRef.current) {
+      audioRef.current.load();
+    }
   }, []);
 
   // Reset timer when initialSeconds changes (switching between run/rest)
@@ -46,6 +50,7 @@ export const useTimerLogic = ({
         setTimeLeft((prevTime) => {
           // Play countdown sounds in the last 3 seconds
           if (prevTime <= 4 && prevTime > 1) {
+            // Only play sounds for the last 3 seconds (3, 2, 1)
             if (isRest) {
               playRestCountdownSound();
             } else {
@@ -55,8 +60,10 @@ export const useTimerLogic = ({
           
           if (prevTime <= 1) {
             clearInterval(intervalRef.current!);
+            // Final beep for interval completion
             if (audioRef.current) {
-              audioRef.current.play();
+              audioRef.current.currentTime = 0;
+              audioRef.current.play().catch(e => console.warn('Could not play completion beep:', e));
             }
             setTimeout(() => onComplete(), 1000);
             return 0;
