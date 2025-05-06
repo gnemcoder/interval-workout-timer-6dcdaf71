@@ -9,7 +9,65 @@ export type Json =
 export type Database = {
   public: {
     Tables: {
-      [_ in never]: never
+      profiles: {
+        Row: {
+          created_at: string
+          id: string
+        }
+        Insert: {
+          created_at?: string
+          id: string
+        }
+        Update: {
+          created_at?: string
+          id?: string
+        }
+        Relationships: []
+      }
+      sessions: {
+        Row: {
+          actual_rest_time: number
+          actual_run_time: number
+          created_at: string
+          id: string
+          iterations: number
+          rest_seconds: number
+          run_seconds: number
+          total_time: number
+          user_id: string
+        }
+        Insert: {
+          actual_rest_time: number
+          actual_run_time: number
+          created_at?: string
+          id?: string
+          iterations: number
+          rest_seconds: number
+          run_seconds: number
+          total_time: number
+          user_id: string
+        }
+        Update: {
+          actual_rest_time?: number
+          actual_run_time?: number
+          created_at?: string
+          id?: string
+          iterations?: number
+          rest_seconds?: number
+          run_seconds?: number
+          total_time?: number
+          user_id?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "sessions_user_id_fkey"
+            columns: ["user_id"]
+            isOneToOne: false
+            referencedRelation: "profiles"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
     }
     Views: {
       [_ in never]: never
