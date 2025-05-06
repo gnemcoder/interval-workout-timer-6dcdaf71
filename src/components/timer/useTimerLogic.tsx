@@ -32,10 +32,14 @@ export const useTimerLogic = ({
     // Play the appropriate sound when switching between work and rest, but not on initial render
     if (!initialRenderRef.current) {
       if (isRest) {
+        console.log("Playing rest started sound");
         playRestStartedSound();
       } else {
+        console.log("Playing work started sound");
         playWorkStartedSound();
       }
+    } else {
+      console.log("Initial render - not playing sounds");
     }
     initialRenderRef.current = false;
   }, [initialSeconds, isRest]);
@@ -48,19 +52,26 @@ export const useTimerLogic = ({
     }
     
     if (isRunning && !isPaused) {
+      console.log(`Timer started: ${timeLeft} seconds, isRest: ${isRest}`);
+      
       intervalRef.current = window.setInterval(() => {
         setTimeLeft((prevTime) => {
           // Play countdown sounds in the last 3 seconds
           if (prevTime <= 4 && prevTime > 1) {
             // Only play sounds for the last 3 seconds (3, 2, 1)
+            console.log(`Countdown: ${prevTime-1}s remaining`);
             playBeepSound();
           }
           
           if (prevTime <= 1) {
             clearInterval(intervalRef.current!);
             // Final beep for interval completion
+            console.log("Interval complete, playing final beep");
             playBeepSound();
-            setTimeout(() => onComplete(), 1000);
+            setTimeout(() => {
+              console.log("Calling onComplete callback");
+              onComplete();
+            }, 1000);
             return 0;
           }
           
@@ -86,6 +97,7 @@ export const useTimerLogic = ({
     
     setTimeLeft((prevTime) => {
       const newTime = Math.max(1, prevTime + seconds);
+      console.log(`Time adjusted by ${seconds} seconds: ${prevTime} → ${newTime}`);
       return newTime;
     });
     
