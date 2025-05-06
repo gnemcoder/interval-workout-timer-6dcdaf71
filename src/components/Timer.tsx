@@ -55,7 +55,7 @@ const Timer: React.FC<TimerProps> = ({
     <div className="w-full flex flex-col items-center">
       <TimerHeader />
       
-      <div className="w-full max-w-lg bg-gray-900 rounded-2xl p-8 shadow-xl">
+      <div className="w-full max-w-lg bg-spotify-black rounded-2xl p-8 shadow-xl border border-spotify-gray/30">
         <ProgressBar 
           currentInterval={currentInterval} 
           totalIntervals={totalIntervals}

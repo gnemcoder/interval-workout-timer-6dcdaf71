@@ -17,7 +17,7 @@ const IntervalInfo: React.FC<IntervalInfoProps> = ({
       <h2 className="text-xl text-white mb-2">
         Interval {currentInterval} of {totalIntervals}
       </h2>
-      <p className={`text-2xl font-bold ${isRest ? "text-purple-500" : "text-green-500"}`}>
+      <p className={`text-2xl font-bold ${isRest ? "text-spotify-lightgray" : "text-spotify-green"}`}>
         {isRest ? "Rest" : "Run"}
       </p>
     </div>
