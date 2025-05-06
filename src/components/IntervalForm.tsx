@@ -89,17 +89,17 @@ const IntervalForm: React.FC<IntervalFormProps> = ({ onStart }) => {
   };
 
   const handleRunTimeSubmit = (e: React.FormEvent) => {
-    e.preventDefault();
+    e.preventDefault(); // Prevent the form from actually submitting
     handleRunTimeBlur();
   };
 
   const handleRestTimeSubmit = (e: React.FormEvent) => {
-    e.preventDefault();
+    e.preventDefault(); // Prevent the form from actually submitting
     handleRestTimeBlur();
   };
 
   const handleRoundsSubmit = (e: React.FormEvent) => {
-    e.preventDefault();
+    e.preventDefault(); // Prevent the form from actually submitting
     handleRoundsBlur();
   };
 
@@ -144,17 +144,18 @@ const IntervalForm: React.FC<IntervalFormProps> = ({ onStart }) => {
               className="w-20 bg-transparent text-right border-none text-[#333333] text-xl font-bold focus:ring-0 hidden"
             />
             {isEditingRun ? (
-              <form onSubmit={handleRunTimeSubmit}>
+              <div className="inline-block"> {/* Use div instead of form to avoid nested forms */}
                 <input
                   autoFocus
                   type="text"
                   value={runTimeInput}
                   onChange={handleRunTimeChange}
                   onBlur={handleRunTimeBlur}
+                  onKeyDown={(e) => e.key === 'Enter' && handleRunTimeSubmit(e)}
                   pattern="[0-9]{2}:[0-9]{2}"
                   className="w-20 bg-transparent text-right border border-[#333333] text-[#333333] text-xl font-bold focus:outline-none px-1 rounded"
                 />
-              </form>
+              </div>
             ) : (
               <span 
                 className="text-[#333333] text-xl font-bold cursor-pointer" 
@@ -189,17 +190,18 @@ const IntervalForm: React.FC<IntervalFormProps> = ({ onStart }) => {
               className="w-20 bg-transparent text-right border-none text-[#555555] text-xl font-bold focus:ring-0 hidden"
             />
             {isEditingRest ? (
-              <form onSubmit={handleRestTimeSubmit}>
+              <div className="inline-block"> {/* Use div instead of form to avoid nested forms */}
                 <input
                   autoFocus
                   type="text"
                   value={restTimeInput}
                   onChange={handleRestTimeChange}
                   onBlur={handleRestTimeBlur}
+                  onKeyDown={(e) => e.key === 'Enter' && handleRestTimeSubmit(e)}
                   pattern="[0-9]{2}:[0-9]{2}"
                   className="w-20 bg-transparent text-right border border-[#555555] text-[#555555] text-xl font-bold focus:outline-none px-1 rounded"
                 />
-              </form>
+              </div>
             ) : (
               <span 
                 className="text-[#555555] text-xl font-bold cursor-pointer" 
@@ -239,17 +241,18 @@ const IntervalForm: React.FC<IntervalFormProps> = ({ onStart }) => {
               className="w-20 bg-transparent text-right border-none text-[#555555] text-xl font-bold focus:ring-0 hidden"
             />
             {isEditingRounds ? (
-              <form onSubmit={handleRoundsSubmit}>
+              <div className="inline-block"> {/* Use div instead of form to avoid nested forms */}
                 <input
                   autoFocus
                   type="text"
                   value={roundsInput}
                   onChange={handleRoundsChange}
                   onBlur={handleRoundsBlur}
+                  onKeyDown={(e) => e.key === 'Enter' && handleRoundsSubmit(e)}
                   pattern="[0-9]*"
                   className="w-20 bg-transparent text-right border border-[#555555] text-[#555555] text-xl font-bold focus:outline-none px-1 rounded"
                 />
-              </form>
+              </div>
             ) : (
               <span 
                 className="text-[#555555] text-xl font-bold cursor-pointer" 
