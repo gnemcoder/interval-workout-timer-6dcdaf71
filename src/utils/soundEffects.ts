@@ -32,31 +32,37 @@ const createSound = (url: string): HTMLAudioElement => {
   return audio;
 };
 
+// URLs for Supabase stored sounds
+const BEEP_SOUND_URL = 'https://zngumulpqrukuzglevem.supabase.co/storage/v1/object/public/sounds/beep-23.mp3';
+const WORK_STARTED_SOUND_URL = 'https://zngumulpqrukuzglevem.supabase.co/storage/v1/object/public/sounds/Work%20session%20started.mp3';
+// Using beep sound as fallback for rest since we don't have a specific one yet
+const REST_STARTED_SOUND_URL = BEEP_SOUND_URL;
+
 // Create audio instances
 let beepSound: HTMLAudioElement | null = null;
 let workStartedSound: HTMLAudioElement | null = null;
 let restStartedSound: HTMLAudioElement | null = null;
 
 // Fallback to use if specific sounds aren't available
-const FALLBACK_SOUND_URL = '/beep.mp3';
+const FALLBACK_SOUND_URL = BEEP_SOUND_URL;
 
 // Initialize sounds (called when the app starts)
 export const initSounds = () => {
   try {
     // Create sounds with fallback options
-    beepSound = createSound('/sounds/beep.mp3');
+    beepSound = createSound(BEEP_SOUND_URL);
     beepSound.addEventListener('error', () => {
       console.log('Beep sound failed to load, using fallback');
       beepSound = createSound(FALLBACK_SOUND_URL);
     });
     
-    workStartedSound = createSound('/sounds/work_started.mp3');
+    workStartedSound = createSound(WORK_STARTED_SOUND_URL);
     workStartedSound.addEventListener('error', () => {
       console.log('Work started sound failed to load, using fallback');
       workStartedSound = createSound(FALLBACK_SOUND_URL);
     });
     
-    restStartedSound = createSound('/sounds/rest_started.mp3');
+    restStartedSound = createSound(REST_STARTED_SOUND_URL);
     restStartedSound.addEventListener('error', () => {
       console.log('Rest started sound failed to load, using fallback');
       restStartedSound = createSound(FALLBACK_SOUND_URL);
@@ -67,7 +73,7 @@ export const initSounds = () => {
     workStartedSound.load();
     restStartedSound.load();
     
-    console.log('Sound effects initialized');
+    console.log('Sound effects initialized with Supabase sounds');
   } catch (e) {
     console.error('Error initializing sounds:', e);
   }

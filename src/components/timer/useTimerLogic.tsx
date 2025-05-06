@@ -23,16 +23,7 @@ export const useTimerLogic = ({
 }: UseTimerLogicProps) => {
   const [timeLeft, setTimeLeft] = useState(initialSeconds);
   const intervalRef = useRef<number | null>(null);
-  const audioRef = useRef<HTMLAudioElement | null>(null);
   const initialRenderRef = useRef(true);
-
-  useEffect(() => {
-    audioRef.current = new Audio('/beep.mp3');
-    // Preload the beep sound
-    if (audioRef.current) {
-      audioRef.current.load();
-    }
-  }, []);
 
   // Reset timer when initialSeconds changes (switching between run/rest)
   useEffect(() => {
@@ -68,10 +59,7 @@ export const useTimerLogic = ({
           if (prevTime <= 1) {
             clearInterval(intervalRef.current!);
             // Final beep for interval completion
-            if (audioRef.current) {
-              audioRef.current.currentTime = 0;
-              audioRef.current.play().catch(e => console.warn('Could not play completion beep:', e));
-            }
+            playBeepSound();
             setTimeout(() => onComplete(), 1000);
             return 0;
           }
