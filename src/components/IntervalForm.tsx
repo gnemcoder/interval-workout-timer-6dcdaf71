@@ -3,7 +3,7 @@ import React, { useState } from 'react';
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
-import { ArrowRight } from "lucide-react";
+import { ArrowRight, Play } from "lucide-react";
 
 interface IntervalFormProps {
   onStart: (runMinutes: number, restMinutes: number, iterations: number) => void;
@@ -20,70 +20,121 @@ const IntervalForm: React.FC<IntervalFormProps> = ({ onStart }) => {
   };
 
   return (
-    <form onSubmit={handleSubmit} className="glass-card p-6 rounded-xl space-y-6 max-w-md w-full">
-      <div className="text-center">
-        <h2 className="text-xl font-semibold text-white mb-2">Set Your Intervals</h2>
-        <div className="text-3xl font-bold text-spotify-green mb-4">
-          Stride Sync
-        </div>
+    <form onSubmit={handleSubmit} className="w-full max-w-md">
+      <div className="text-center mb-8">
+        <h1 className="text-4xl font-bold text-white mb-2">Interval Timer</h1>
       </div>
       
-      <div className="space-y-4">
-        {/* Run Time - Light green box */}
-        <div className="bg-[#F2FCE2] rounded-lg p-4 text-spotify-black">
-          <Label htmlFor="run-time" className="block font-medium text-spotify-black/80 mb-2">
-            Run Time (minutes)
-          </Label>
-          <Input
-            id="run-time"
-            type="number"
-            min="0.5"
-            step="0.5"
-            value={runMinutes}
-            onChange={(e) => setRunMinutes(parseFloat(e.target.value))}
-            className="bg-white/90 text-spotify-black border-transparent focus:border-spotify-green focus:ring-spotify-green"
-          />
+      <div className="text-center mb-12">
+        <div className="text-8xl font-bold text-white mb-8">
+          {String(Math.floor(runMinutes)).padStart(2, '0')}:{String(Math.round((runMinutes % 1) * 60)).padStart(2, '0')}
         </div>
         
-        {/* Rest Time - Red box */}
-        <div className="bg-[#ea384c] rounded-lg p-4 text-white">
-          <Label htmlFor="rest-time" className="block font-medium text-white/90 mb-2">
-            Rest Time (minutes)
-          </Label>
-          <Input
-            id="rest-time"
-            type="number"
-            min="0.5"
-            step="0.5"
-            value={restMinutes}
-            onChange={(e) => setRestMinutes(parseFloat(e.target.value))}
-            className="bg-white/90 text-spotify-black border-transparent focus:border-red-500 focus:ring-red-500"
-          />
-        </div>
-        
-        {/* Intervals - Light blue box */}
-        <div className="bg-[#D3E4FD] rounded-lg p-4 text-spotify-black">
-          <Label htmlFor="iterations" className="block font-medium text-spotify-black/80 mb-2">
-            Number of Intervals
-          </Label>
-          <Input
-            id="iterations"
-            type="number"
-            min="1"
-            max="20"
-            value={iterations}
-            onChange={(e) => setIterations(parseInt(e.target.value))}
-            className="bg-white/90 text-spotify-black border-transparent focus:border-blue-600 focus:ring-blue-600"
-          />
-        </div>
+        <Button 
+          type="submit" 
+          className="rounded-full w-20 h-20 bg-white hover:bg-white/90 text-red-500"
+        >
+          <Play size={32} fill="currentColor" />
+        </Button>
       </div>
       
-      <Button 
-        type="submit" 
-        className="w-full bg-spotify-green hover:bg-spotify-green/90 text-white font-medium flex items-center justify-center gap-2"
-      >
-        Start Session <ArrowRight size={18} />
-      </Button>
+      <div className="space-y-4 mt-8">
+        {/* Work interval - Light green box */}
+        <div className="bg-[#e8f8e8] rounded-xl p-4 flex items-center">
+          <div className="bg-[#c2ecc2] rounded-full p-2 mr-4">
+            <Play size={24} className="text-green-600" />
+          </div>
+          <div className="flex-grow">
+            <Label htmlFor="run-time" className="font-medium text-gray-800">
+              Work
+            </Label>
+          </div>
+          <div className="text-right">
+            <Input
+              id="run-time"
+              type="number"
+              min="0.5"
+              step="0.5"
+              value={runMinutes}
+              onChange={(e) => setRunMinutes(parseFloat(e.target.value))}
+              className="w-20 bg-transparent text-right border-none text-green-600 text-xl font-bold focus:ring-0"
+            />
+          </div>
+        </div>
+        
+        {/* Rest Time - Light red box */}
+        <div className="bg-[#ffe8e8] rounded-xl p-4 flex items-center">
+          <div className="bg-[#ffcaca] rounded-full p-2 mr-4">
+            <div className="w-6 h-6 flex items-center justify-center">
+              <div className="w-3 h-3 bg-red-500 rounded-sm"></div>
+            </div>
+          </div>
+          <div className="flex-grow">
+            <Label htmlFor="rest-time" className="font-medium text-gray-800">
+              Rest
+            </Label>
+          </div>
+          <div className="text-right">
+            <Input
+              id="rest-time"
+              type="number"
+              min="0.5"
+              step="0.5"
+              value={restMinutes}
+              onChange={(e) => setRestMinutes(parseFloat(e.target.value))}
+              className="w-20 bg-transparent text-right border-none text-red-500 text-xl font-bold focus:ring-0"
+            />
+          </div>
+        </div>
+        
+        {/* Exercises - Light gray box */}
+        <div className="bg-[#f0f0f0] rounded-xl p-4 flex items-center">
+          <div className="bg-[#e0e0e0] rounded-full p-2 mr-4">
+            <div className="w-6 h-6 flex items-center justify-center text-gray-500">
+              ⚡
+            </div>
+          </div>
+          <div className="flex-grow">
+            <Label htmlFor="iterations" className="font-medium text-gray-800">
+              Exercises
+            </Label>
+          </div>
+          <div className="text-right text-xl font-bold text-gray-500">
+            <span>1</span>
+          </div>
+        </div>
+        
+        {/* Rounds - Light blue box */}
+        <div className="bg-[#e8ecff] rounded-xl p-4 flex items-center">
+          <div className="bg-[#d0d8ff] rounded-full p-2 mr-4">
+            <div className="w-6 h-6 flex items-center justify-center">
+              <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" className="text-blue-600">
+                <path d="M22 12c0 6-4.39 10-9.806 10C7.792 22 4.24 19.665 3 16"></path>
+                <path d="M2 12C2 6 6.39 2 11.806 2 16.209 2 19.76 4.335 21 8"></path>
+                <path d="M7 17l-4-1h4"></path>
+                <path d="M17 7l4 1h-4"></path>
+              </svg>
+            </div>
+          </div>
+          <div className="flex-grow">
+            <Label htmlFor="iterations" className="font-medium text-gray-800">
+              Rounds
+            </Label>
+          </div>
+          <div className="text-right">
+            <Input
+              id="iterations"
+              type="number"
+              min="1"
+              max="20"
+              value={iterations}
+              onChange={(e) => setIterations(parseInt(e.target.value))}
+              className="w-20 bg-transparent text-right border-none text-blue-600 text-xl font-bold focus:ring-0"
+            />
+            <span className="text-blue-600 text-xl font-bold">X</span>
+          </div>
+        </div>
+      </div>
     </form>
   );
 };

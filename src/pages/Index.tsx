@@ -22,53 +22,50 @@ const Index = () => {
   } = useInterval();
 
   return (
-    <div className="min-h-screen bg-gradient-to-b from-spotify-black to-spotify-darkblack flex flex-col items-center justify-center px-4 py-8">
-      <div className="w-full max-w-md mb-8">
-        <h1 className="text-3xl font-bold text-white text-center mb-2">Stride Sync</h1>
-        <p className="text-spotify-lightgray text-center">Interval Running Tracker</p>
+    <div className="min-h-screen bg-gradient-to-b from-[#ff5f6d] to-[#ffc371] flex flex-col items-center justify-center px-4 py-8">
+      <div className="w-full max-w-md">
+        {!state.isRunning && !state.isComplete && (
+          <IntervalForm onStart={(run, rest, iterations) => startSession(run, rest, iterations)} />
+        )}
+
+        {state.isRunning && (
+          <div className="w-full">
+            <ProgressBar
+              currentInterval={state.currentInterval}
+              totalIntervals={state.iterations}
+              isRest={state.isRest}
+            />
+
+            <Timer
+              initialSeconds={state.initialSeconds}
+              isRunning={state.isRunning}
+              isPaused={state.isPaused}
+              isRest={state.isRest}
+              currentInterval={state.currentInterval}
+              totalIntervals={state.iterations}
+              onComplete={completeInterval}
+              onStop={stopSession}
+              onPauseToggle={togglePause}
+              onTimeAdjust={updateActualTime}
+              onTimeUpdate={updateCurrentIntervalElapsed}
+            />
+          </div>
+        )}
+
+        {state.isComplete && (
+          <SessionSummary
+            runMinutes={state.runSeconds / 60}
+            restMinutes={state.restSeconds / 60}
+            iterations={state.iterations}
+            totalTime={getTotalTime()}
+            actualRunTime={getRunTime()}
+            actualRestTime={getRestTime()}
+            onReset={resetSession}
+          />
+        )}
       </div>
-
-      {!state.isRunning && !state.isComplete && (
-        <IntervalForm onStart={(run, rest, iterations) => startSession(run, rest, iterations)} />
-      )}
-
-      {state.isRunning && (
-        <div className="glass-card p-6 rounded-xl space-y-8 max-w-md w-full">
-          <ProgressBar
-            currentInterval={state.currentInterval}
-            totalIntervals={state.iterations}
-            isRest={state.isRest}
-          />
-
-          <Timer
-            initialSeconds={state.initialSeconds}
-            isRunning={state.isRunning}
-            isPaused={state.isPaused}
-            isRest={state.isRest}
-            currentInterval={state.currentInterval}
-            totalIntervals={state.iterations}
-            onComplete={completeInterval}
-            onStop={stopSession}
-            onPauseToggle={togglePause}
-            onTimeAdjust={updateActualTime}
-            onTimeUpdate={updateCurrentIntervalElapsed}
-          />
-        </div>
-      )}
-
-      {state.isComplete && (
-        <SessionSummary
-          runMinutes={state.runSeconds / 60}
-          restMinutes={state.restSeconds / 60}
-          iterations={state.iterations}
-          totalTime={getTotalTime()}
-          actualRunTime={getRunTime()}
-          actualRestTime={getRestTime()}
-          onReset={resetSession}
-        />
-      )}
       
-      <footer className="mt-8 text-xs text-spotify-lightgray">
+      <footer className="mt-8 text-xs text-white/70">
         <p>© {new Date().getFullYear()} Stride Sync. All rights reserved.</p>
       </footer>
     </div>

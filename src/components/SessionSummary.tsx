@@ -1,7 +1,7 @@
 
 import React from 'react';
 import { Button } from "@/components/ui/button";
-import { ArrowRight } from "lucide-react";
+import { ArrowRight, Play } from "lucide-react";
 
 interface SessionSummaryProps {
   runMinutes: number;
@@ -28,63 +28,89 @@ const SessionSummary: React.FC<SessionSummaryProps> = ({
     const mins = Math.floor(totalSeconds / 60);
     const secs = totalSeconds % 60;
     
-    if (mins > 0) {
-      return `${mins}m ${secs}s`;
-    } else {
-      return `${secs} seconds`;
-    }
+    return `${String(mins).padStart(2, '0')}:${String(secs).padStart(2, '0')}`;
   };
 
   return (
-    <div className="glass-card p-6 rounded-xl space-y-6 max-w-md w-full">
-      <div className="text-center">
-        <h2 className="text-xl font-semibold text-white mb-2">Session Complete!</h2>
-        <div className="text-3xl font-bold text-spotify-green mb-4">
+    <div className="w-full">
+      <div className="text-center mb-8">
+        <h1 className="text-4xl font-bold text-white mb-2">Session Complete</h1>
+      </div>
+      
+      <div className="text-center mb-12">
+        <div className="text-8xl font-bold text-white mb-8">
           {formatTime(totalTime)}
         </div>
+        
+        <Button 
+          onClick={onReset}
+          className="rounded-full w-20 h-20 bg-white hover:bg-white/90 text-red-500"
+        >
+          <Play size={32} fill="currentColor" />
+        </Button>
       </div>
       
-      <div className="space-y-4">
-        {/* Run time - Light green box */}
-        <div className="bg-[#F2FCE2] rounded-lg p-4 text-spotify-black">
-          <div className="flex justify-between items-center">
-            <span className="font-medium text-spotify-black/80">Run Time</span>
-            <span className="font-semibold text-spotify-green text-lg">{formatTime(actualRunTime)}</span>
+      <div className="space-y-4 mt-8">
+        {/* Work interval - Light green box */}
+        <div className="bg-[#e8f8e8] rounded-xl p-4 flex items-center">
+          <div className="bg-[#c2ecc2] rounded-full p-2 mr-4">
+            <Play size={24} className="text-green-600" />
           </div>
-          <div className="text-xs text-spotify-black/60 mt-1">
-            Target: {runMinutes} minutes per interval
+          <div className="flex-grow">
+            <span className="font-medium text-gray-800">
+              Work
+            </span>
+          </div>
+          <div className="text-right">
+            <span className="text-green-600 text-xl font-bold">
+              {formatTime(actualRunTime)}
+            </span>
           </div>
         </div>
         
-        {/* Rest time - Red box */}
-        <div className="bg-[#ea384c] rounded-lg p-4 text-white">
-          <div className="flex justify-between items-center">
-            <span className="font-medium text-white/90">Rest Time</span>
-            <span className="font-semibold text-white text-lg">{formatTime(actualRestTime)}</span>
+        {/* Rest Time - Light red box */}
+        <div className="bg-[#ffe8e8] rounded-xl p-4 flex items-center">
+          <div className="bg-[#ffcaca] rounded-full p-2 mr-4">
+            <div className="w-6 h-6 flex items-center justify-center">
+              <div className="w-3 h-3 bg-red-500 rounded-sm"></div>
+            </div>
           </div>
-          <div className="text-xs text-white/70 mt-1">
-            Target: {restMinutes} minutes per interval
+          <div className="flex-grow">
+            <span className="font-medium text-gray-800">
+              Rest
+            </span>
+          </div>
+          <div className="text-right">
+            <span className="text-red-500 text-xl font-bold">
+              {formatTime(actualRestTime)}
+            </span>
           </div>
         </div>
         
-        {/* Intervals - Light blue box */}
-        <div className="bg-[#D3E4FD] rounded-lg p-4 text-spotify-black">
-          <div className="flex justify-between items-center">
-            <span className="font-medium text-spotify-black/80">Intervals</span>
-            <span className="font-semibold text-blue-600 text-lg">{iterations}</span>
+        {/* Rounds - Light blue box */}
+        <div className="bg-[#e8ecff] rounded-xl p-4 flex items-center">
+          <div className="bg-[#d0d8ff] rounded-full p-2 mr-4">
+            <div className="w-6 h-6 flex items-center justify-center">
+              <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" className="text-blue-600">
+                <path d="M22 12c0 6-4.39 10-9.806 10C7.792 22 4.24 19.665 3 16"></path>
+                <path d="M2 12C2 6 6.39 2 11.806 2 16.209 2 19.76 4.335 21 8"></path>
+                <path d="M7 17l-4-1h4"></path>
+                <path d="M17 7l4 1h-4"></path>
+              </svg>
+            </div>
           </div>
-          <div className="text-xs text-spotify-black/60 mt-1">
-            Total cycles completed
+          <div className="flex-grow">
+            <span className="font-medium text-gray-800">
+              Rounds
+            </span>
+          </div>
+          <div className="text-right">
+            <span className="text-blue-600 text-xl font-bold">
+              {iterations}X
+            </span>
           </div>
         </div>
       </div>
-      
-      <Button 
-        onClick={onReset}
-        className="w-full bg-spotify-green hover:bg-spotify-green/90 text-white font-medium flex items-center justify-center gap-2"
-      >
-        Start New Session <ArrowRight size={18} />
-      </Button>
     </div>
   );
 };
