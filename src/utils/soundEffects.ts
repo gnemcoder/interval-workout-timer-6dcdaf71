@@ -2,23 +2,33 @@
 // Sound effects utility for workout timer
 const createSound = (url: string): HTMLAudioElement => {
   const audio = new Audio(url);
+  
+  // Using type assertions to handle non-standard properties
   // This allows sounds to play alongside other audio on mobile devices
-  audio.mozAudioChannelType = 'content' as any;  // Firefox
-  if ('webkitAudioContext' in window) {
+  try {
+    // For Firefox
+    (audio as any).mozAudioChannelType = 'content';
+    
     // For Safari/Chrome
-    audio.playsInline = true;
-  }
-  // Ensure sounds can play alongside music apps (doesn't pause background music)
-  audio.addEventListener('play', () => {
-    try {
-      // Check and set audio session if available (works on iOS)
-      if ('AudioContext' in window || 'webkitAudioContext' in window) {
-        audio.preservesPitch = false;
-      }
-    } catch (e) {
-      console.error("Failed to configure audio session:", e);
+    if ('webkitAudioContext' in window) {
+      (audio as any).playsInline = true;
     }
-  });
+    
+    // Ensure sounds can play alongside music apps (doesn't pause background music)
+    audio.addEventListener('play', () => {
+      try {
+        // Check and set audio session if available (works on iOS)
+        if ('AudioContext' in window || 'webkitAudioContext' in window) {
+          (audio as any).preservesPitch = false;
+        }
+      } catch (e) {
+        console.error("Failed to configure audio session:", e);
+      }
+    });
+  } catch (e) {
+    console.error("Failed to set audio properties:", e);
+  }
+  
   return audio;
 };
 
