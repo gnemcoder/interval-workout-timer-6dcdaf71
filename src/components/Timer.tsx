@@ -41,6 +41,7 @@ const Timer: React.FC<TimerProps> = ({
     initialSeconds,
     isRunning,
     isPaused,
+    isRest, // Pass isRest to useTimerLogic
     onComplete,
     onTimeUpdate,
     onTimeAdjust

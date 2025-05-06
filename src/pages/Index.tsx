@@ -1,4 +1,3 @@
-
 import { useState, useEffect } from "react";
 import { useAuth } from "@/components/auth/AuthProvider";
 import { useNavigate } from "react-router-dom";
@@ -9,6 +8,7 @@ import SessionSummary from "@/components/SessionSummary";
 import { useInterval } from "@/hooks/useInterval";
 import Header from "@/components/Header";
 import { toast } from "sonner";
+import { initSounds, playStartSound } from "@/utils/soundEffects";
 
 const Index = () => {
   const {
@@ -34,6 +34,11 @@ const Index = () => {
     iterations: 5
   });
   const [isLoadingLastSession, setIsLoadingLastSession] = useState(false);
+
+  // Initialize sounds when component mounts
+  useEffect(() => {
+    initSounds();
+  }, []);
 
   // Fetch user's last session settings
   useEffect(() => {
@@ -110,6 +115,12 @@ const Index = () => {
     }
   }, [state.isComplete]);
 
+  // Wrap the startSession function to play the start sound
+  const handleStartSession = (run: number, rest: number, iterations: number) => {
+    playStartSound();
+    startSession(run, rest, iterations);
+  };
+
   return (
     <div className="min-h-screen bg-black flex flex-col">
       <Header />
@@ -118,7 +129,7 @@ const Index = () => {
         <div className="w-full max-w-md">
           {!state.isRunning && !state.isComplete && (
             <IntervalForm 
-              onStart={(run, rest, iterations) => startSession(run, rest, iterations)} 
+              onStart={(run, rest, iterations) => handleStartSession(run, rest, iterations)} 
               defaultRunMinutes={lastSession.runMinutes}
               defaultRestMinutes={lastSession.restMinutes}
               defaultRounds={lastSession.iterations}

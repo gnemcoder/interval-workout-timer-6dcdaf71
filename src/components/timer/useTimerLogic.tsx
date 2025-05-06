@@ -1,10 +1,12 @@
 
 import { useState, useRef, useEffect } from 'react';
+import { playWorkCountdownSound, playRestCountdownSound } from '../../utils/soundEffects';
 
 interface UseTimerLogicProps {
   initialSeconds: number;
   isRunning: boolean;
   isPaused: boolean;
+  isRest: boolean; // Added isRest prop to determine which sound to play
   onComplete: () => void;
   onTimeUpdate?: (seconds: number) => void;
   onTimeAdjust?: (seconds: number) => void;
@@ -14,6 +16,7 @@ export const useTimerLogic = ({
   initialSeconds,
   isRunning,
   isPaused,
+  isRest,
   onComplete,
   onTimeUpdate,
   onTimeAdjust
@@ -41,6 +44,15 @@ export const useTimerLogic = ({
     if (isRunning && !isPaused) {
       intervalRef.current = window.setInterval(() => {
         setTimeLeft((prevTime) => {
+          // Play countdown sounds in the last 3 seconds
+          if (prevTime <= 4 && prevTime > 1) {
+            if (isRest) {
+              playRestCountdownSound();
+            } else {
+              playWorkCountdownSound();
+            }
+          }
+          
           if (prevTime <= 1) {
             clearInterval(intervalRef.current!);
             if (audioRef.current) {
@@ -65,7 +77,7 @@ export const useTimerLogic = ({
         clearInterval(intervalRef.current);
       }
     };
-  }, [isRunning, isPaused, onComplete, onTimeUpdate]);
+  }, [isRunning, isPaused, onComplete, onTimeUpdate, isRest]);
 
   const adjustTime = (seconds: number) => {
     if (!isRunning || isPaused) return;
