@@ -8,13 +8,17 @@ export default function Header() {
   const { user, signOut } = useAuth();
   const navigate = useNavigate();
 
+  const goToHomePage = () => {
+    navigate("/");
+  };
+
   return (
     <header className="w-full bg-spotify-black border-b border-spotify-gray/30 py-4 px-6">
       <div className="max-w-screen-xl mx-auto flex items-center justify-between">
         <div className="flex items-center">
           <h1 
-            className="text-xl font-bold text-white cursor-pointer"
-            onClick={() => navigate("/")}
+            className="text-xl font-bold text-white cursor-pointer hover:text-spotify-green transition-colors"
+            onClick={goToHomePage}
           >
             Stride Sync
           </h1>
