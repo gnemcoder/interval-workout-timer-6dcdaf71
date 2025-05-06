@@ -10,11 +10,16 @@ export default defineConfig(({ mode }) => ({
     host: "::",
     port: 8080,
   },
-  base: "/", // Explicitly set the base path to root
+  base: "", // Empty string to ensure assets are loaded from the current path
   build: {
     outDir: "dist",
     emptyOutDir: true, // Clean the output directory before building
     sourcemap: true,
+    rollupOptions: {
+      output: {
+        manualChunks: undefined // Disable code splitting for simpler output
+      }
+    }
   },
   plugins: [
     react(),
