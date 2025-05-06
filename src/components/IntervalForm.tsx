@@ -19,6 +19,13 @@ const IntervalForm: React.FC<IntervalFormProps> = ({ onStart }) => {
     onStart(runMinutes, restMinutes, iterations);
   };
 
+  // Format time to mm:ss
+  const formatTime = (minutes: number): string => {
+    const mins = Math.floor(minutes);
+    const secs = Math.round((minutes % 1) * 60);
+    return `${String(mins).padStart(2, '0')}:${String(secs).padStart(2, '0')}`;
+  };
+
   return (
     <form onSubmit={handleSubmit} className="w-full max-w-md">
       <div className="text-center mb-8">
@@ -27,7 +34,7 @@ const IntervalForm: React.FC<IntervalFormProps> = ({ onStart }) => {
       
       <div className="text-center mb-12">
         <div className="text-8xl font-bold text-white mb-8">
-          {String(Math.floor(runMinutes)).padStart(2, '0')}:{String(Math.round((runMinutes % 1) * 60)).padStart(2, '0')}
+          {formatTime(runMinutes)}
         </div>
         
         <Button 
