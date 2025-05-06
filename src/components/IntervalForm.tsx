@@ -103,7 +103,12 @@ const IntervalForm: React.FC<IntervalFormProps> = ({ onStart }) => {
             value={runTimeStr}
             onChange={handleRunTimeChange}
             onFocus={handleInputFocus}
-            className="bg-transparent text-right text-2xl font-semibold text-gray-800 w-28 outline-none"
+            className="bg-transparent text-right text-2xl font-semibold text-gray-800 w-28 outline-none select-none focus:text-gray-800 focus:bg-gray-200 focus:rounded px-2"
+            style={{ 
+              WebkitUserSelect: 'text',
+              WebkitTapHighlightColor: 'transparent', 
+              caretColor: '#1DB954',
+            }}
           />
         </div>
         
@@ -120,7 +125,12 @@ const IntervalForm: React.FC<IntervalFormProps> = ({ onStart }) => {
             value={restTimeStr}
             onChange={handleRestTimeChange}
             onFocus={handleInputFocus}
-            className="bg-transparent text-right text-2xl font-semibold text-gray-800 w-28 outline-none"
+            className="bg-transparent text-right text-2xl font-semibold text-gray-800 w-28 outline-none select-none focus:text-gray-800 focus:bg-gray-200 focus:rounded px-2"
+            style={{ 
+              WebkitUserSelect: 'text',
+              WebkitTapHighlightColor: 'transparent', 
+              caretColor: '#1DB954',
+            }}
           />
         </div>
         
@@ -137,7 +147,12 @@ const IntervalForm: React.FC<IntervalFormProps> = ({ onStart }) => {
             value={roundsStr}
             onChange={handleRoundsChange}
             onFocus={handleInputFocus}
-            className="bg-transparent text-right text-2xl font-semibold text-gray-800 w-28 outline-none"
+            className="bg-transparent text-right text-2xl font-semibold text-gray-800 w-28 outline-none select-none focus:text-gray-800 focus:bg-gray-200 focus:rounded px-2"
+            style={{ 
+              WebkitUserSelect: 'text',
+              WebkitTapHighlightColor: 'transparent', 
+              caretColor: '#1DB954',
+            }}
           />
         </div>
       </form>
