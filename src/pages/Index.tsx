@@ -8,7 +8,7 @@ import SessionSummary from "@/components/SessionSummary";
 import { useInterval } from "@/hooks/useInterval";
 import Header from "@/components/Header";
 import { toast } from "sonner";
-import { initSounds, playStartSound } from "@/utils/soundEffects";
+import { initSounds, playWorkStartedSound } from "@/utils/soundEffects";
 
 const Index = () => {
   const {
@@ -117,7 +117,7 @@ const Index = () => {
 
   // Wrap the startSession function to play the start sound
   const handleStartSession = (run: number, rest: number, iterations: number) => {
-    playStartSound();
+    playWorkStartedSound(); // Play work started sound when the session begins
     startSession(run, rest, iterations);
   };
 

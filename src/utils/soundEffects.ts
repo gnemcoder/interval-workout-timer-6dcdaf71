@@ -33,39 +33,39 @@ const createSound = (url: string): HTMLAudioElement => {
 };
 
 // Create audio instances
-let startSound: HTMLAudioElement | null = null;
-let workCountdownSound: HTMLAudioElement | null = null;
-let restCountdownSound: HTMLAudioElement | null = null;
+let beepSound: HTMLAudioElement | null = null;
+let workStartedSound: HTMLAudioElement | null = null;
+let restStartedSound: HTMLAudioElement | null = null;
 
-// Fallback to use the built-in beep sound if specific sounds aren't available
+// Fallback to use if specific sounds aren't available
 const FALLBACK_SOUND_URL = '/beep.mp3';
 
 // Initialize sounds (called when the app starts)
 export const initSounds = () => {
   try {
     // Create sounds with fallback options
-    startSound = createSound('/sounds/start.mp3');
-    startSound.addEventListener('error', () => {
-      console.log('Start sound failed to load, using fallback');
-      startSound = createSound(FALLBACK_SOUND_URL);
+    beepSound = createSound('/sounds/beep.mp3');
+    beepSound.addEventListener('error', () => {
+      console.log('Beep sound failed to load, using fallback');
+      beepSound = createSound(FALLBACK_SOUND_URL);
     });
     
-    workCountdownSound = createSound('/sounds/work-countdown.mp3');
-    workCountdownSound.addEventListener('error', () => {
-      console.log('Work countdown sound failed to load, using fallback');
-      workCountdownSound = createSound(FALLBACK_SOUND_URL);
+    workStartedSound = createSound('/sounds/work_started.mp3');
+    workStartedSound.addEventListener('error', () => {
+      console.log('Work started sound failed to load, using fallback');
+      workStartedSound = createSound(FALLBACK_SOUND_URL);
     });
     
-    restCountdownSound = createSound('/sounds/rest-countdown.mp3');
-    restCountdownSound.addEventListener('error', () => {
-      console.log('Rest countdown sound failed to load, using fallback');
-      restCountdownSound = createSound(FALLBACK_SOUND_URL);
+    restStartedSound = createSound('/sounds/rest_started.mp3');
+    restStartedSound.addEventListener('error', () => {
+      console.log('Rest started sound failed to load, using fallback');
+      restStartedSound = createSound(FALLBACK_SOUND_URL);
     });
     
     // Preload sounds
-    startSound.load();
-    workCountdownSound.load();
-    restCountdownSound.load();
+    beepSound.load();
+    workStartedSound.load();
+    restStartedSound.load();
     
     console.log('Sound effects initialized');
   } catch (e) {
@@ -74,56 +74,56 @@ export const initSounds = () => {
 };
 
 // Play sound functions with additional error handling
-export const playStartSound = () => {
-  if (startSound) {
+export const playBeepSound = () => {
+  if (beepSound) {
     try {
-      startSound.currentTime = 0;
-      startSound.play().catch(e => {
-        console.warn('Could not play start sound:', e);
+      beepSound.currentTime = 0;
+      beepSound.play().catch(e => {
+        console.warn('Could not play beep sound:', e);
         // Try fallback sound if main sound fails
         const fallback = new Audio(FALLBACK_SOUND_URL);
         fallback.play().catch(e => console.warn('Fallback sound also failed:', e));
       });
     } catch (e) {
-      console.warn('Error playing start sound:', e);
+      console.warn('Error playing beep sound:', e);
     }
   } else {
-    console.warn('Start sound not initialized');
+    console.warn('Beep sound not initialized');
   }
 };
 
-export const playWorkCountdownSound = () => {
-  if (workCountdownSound) {
+export const playWorkStartedSound = () => {
+  if (workStartedSound) {
     try {
-      workCountdownSound.currentTime = 0;
-      workCountdownSound.play().catch(e => {
-        console.warn('Could not play work countdown sound:', e);
+      workStartedSound.currentTime = 0;
+      workStartedSound.play().catch(e => {
+        console.warn('Could not play work started sound:', e);
         // Try fallback sound if main sound fails
         const fallback = new Audio(FALLBACK_SOUND_URL);
         fallback.play().catch(e => console.warn('Fallback sound also failed:', e));
       });
     } catch (e) {
-      console.warn('Error playing work countdown sound:', e);
+      console.warn('Error playing work started sound:', e);
     }
   } else {
-    console.warn('Work countdown sound not initialized');
+    console.warn('Work started sound not initialized');
   }
 };
 
-export const playRestCountdownSound = () => {
-  if (restCountdownSound) {
+export const playRestStartedSound = () => {
+  if (restStartedSound) {
     try {
-      restCountdownSound.currentTime = 0;
-      restCountdownSound.play().catch(e => {
-        console.warn('Could not play rest countdown sound:', e);
+      restStartedSound.currentTime = 0;
+      restStartedSound.play().catch(e => {
+        console.warn('Could not play rest started sound:', e);
         // Try fallback sound if main sound fails
         const fallback = new Audio(FALLBACK_SOUND_URL);
         fallback.play().catch(e => console.warn('Fallback sound also failed:', e));
       });
     } catch (e) {
-      console.warn('Error playing rest countdown sound:', e);
+      console.warn('Error playing rest started sound:', e);
     }
   } else {
-    console.warn('Rest countdown sound not initialized');
+    console.warn('Rest started sound not initialized');
   }
 };

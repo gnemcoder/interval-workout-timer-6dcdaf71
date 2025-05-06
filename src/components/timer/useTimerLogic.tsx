@@ -1,12 +1,12 @@
 
 import { useState, useRef, useEffect } from 'react';
-import { playWorkCountdownSound, playRestCountdownSound } from '../../utils/soundEffects';
+import { playBeepSound, playWorkStartedSound, playRestStartedSound } from '../../utils/soundEffects';
 
 interface UseTimerLogicProps {
   initialSeconds: number;
   isRunning: boolean;
   isPaused: boolean;
-  isRest: boolean; // Added isRest prop to determine which sound to play
+  isRest: boolean;
   onComplete: () => void;
   onTimeUpdate?: (seconds: number) => void;
   onTimeAdjust?: (seconds: number) => void;
@@ -24,6 +24,7 @@ export const useTimerLogic = ({
   const [timeLeft, setTimeLeft] = useState(initialSeconds);
   const intervalRef = useRef<number | null>(null);
   const audioRef = useRef<HTMLAudioElement | null>(null);
+  const initialRenderRef = useRef(true);
 
   useEffect(() => {
     audioRef.current = new Audio('/beep.mp3');
@@ -36,7 +37,17 @@ export const useTimerLogic = ({
   // Reset timer when initialSeconds changes (switching between run/rest)
   useEffect(() => {
     setTimeLeft(initialSeconds);
-  }, [initialSeconds]);
+    
+    // Play the appropriate sound when switching between work and rest, but not on initial render
+    if (!initialRenderRef.current) {
+      if (isRest) {
+        playRestStartedSound();
+      } else {
+        playWorkStartedSound();
+      }
+    }
+    initialRenderRef.current = false;
+  }, [initialSeconds, isRest]);
 
   useEffect(() => {
     // Clear any existing interval first
@@ -51,11 +62,7 @@ export const useTimerLogic = ({
           // Play countdown sounds in the last 3 seconds
           if (prevTime <= 4 && prevTime > 1) {
             // Only play sounds for the last 3 seconds (3, 2, 1)
-            if (isRest) {
-              playRestCountdownSound();
-            } else {
-              playWorkCountdownSound();
-            }
+            playBeepSound();
           }
           
           if (prevTime <= 1) {
@@ -84,7 +91,7 @@ export const useTimerLogic = ({
         clearInterval(intervalRef.current);
       }
     };
-  }, [isRunning, isPaused, onComplete, onTimeUpdate, isRest]);
+  }, [isRunning, isPaused, onComplete, onTimeUpdate]);
 
   const adjustTime = (seconds: number) => {
     if (!isRunning || isPaused) return;
