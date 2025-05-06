@@ -15,8 +15,10 @@ const IntervalForm: React.FC<IntervalFormProps> = ({ onStart }) => {
   const [iterations, setIterations] = useState<number>(5);
   const [isEditingRun, setIsEditingRun] = useState<boolean>(false);
   const [isEditingRest, setIsEditingRest] = useState<boolean>(false);
+  const [isEditingRounds, setIsEditingRounds] = useState<boolean>(false);
   const [runTimeInput, setRunTimeInput] = useState<string>('05:00');
   const [restTimeInput, setRestTimeInput] = useState<string>('02:00');
+  const [roundsInput, setRoundsInput] = useState<string>('5');
   
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
@@ -40,12 +42,21 @@ const IntervalForm: React.FC<IntervalFormProps> = ({ onStart }) => {
     setRestTimeInput(formatTime(restMinutes));
   };
 
+  const handleRoundsClick = () => {
+    setIsEditingRounds(true);
+    setRoundsInput(iterations.toString());
+  };
+
   const handleRunTimeChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     setRunTimeInput(e.target.value);
   };
 
   const handleRestTimeChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     setRestTimeInput(e.target.value);
+  };
+
+  const handleRoundsChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    setRoundsInput(e.target.value);
   };
 
   const parseTimeToMinutes = (timeStr: string): number => {
@@ -69,6 +80,14 @@ const IntervalForm: React.FC<IntervalFormProps> = ({ onStart }) => {
     setIsEditingRest(false);
   };
 
+  const handleRoundsBlur = () => {
+    const newRounds = parseInt(roundsInput, 10);
+    // Ensure the value is between 1 and 20
+    const clampedRounds = Math.min(Math.max(newRounds, 1), 20);
+    setIterations(isNaN(newRounds) ? 5 : clampedRounds);
+    setIsEditingRounds(false);
+  };
+
   const handleRunTimeSubmit = (e: React.FormEvent) => {
     e.preventDefault();
     handleRunTimeBlur();
@@ -77,6 +96,11 @@ const IntervalForm: React.FC<IntervalFormProps> = ({ onStart }) => {
   const handleRestTimeSubmit = (e: React.FormEvent) => {
     e.preventDefault();
     handleRestTimeBlur();
+  };
+
+  const handleRoundsSubmit = (e: React.FormEvent) => {
+    e.preventDefault();
+    handleRoundsBlur();
   };
 
   return (
@@ -187,23 +211,6 @@ const IntervalForm: React.FC<IntervalFormProps> = ({ onStart }) => {
           </div>
         </div>
         
-        {/* Exercises - Neutral gray box */}
-        <div className="bg-[#EFEFEF] rounded-xl p-4 flex items-center">
-          <div className="bg-[#DDDDDD] rounded-full p-2 mr-4">
-            <div className="w-6 h-6 flex items-center justify-center text-[#666666]">
-              ⚡
-            </div>
-          </div>
-          <div className="flex-grow">
-            <Label htmlFor="iterations" className="font-medium text-[#333333]">
-              Exercises
-            </Label>
-          </div>
-          <div className="text-right text-xl font-bold text-[#555555]">
-            <span>1</span>
-          </div>
-        </div>
-        
         {/* Rounds - Neutral gray box */}
         <div className="bg-[#F1F1F1] rounded-xl p-4 flex items-center">
           <div className="bg-[#DEDEDE] rounded-full p-2 mr-4">
@@ -231,7 +238,26 @@ const IntervalForm: React.FC<IntervalFormProps> = ({ onStart }) => {
               onChange={(e) => setIterations(parseInt(e.target.value))}
               className="w-20 bg-transparent text-right border-none text-[#555555] text-xl font-bold focus:ring-0 hidden"
             />
-            <span className="text-[#555555] text-xl font-bold">{iterations}X</span>
+            {isEditingRounds ? (
+              <form onSubmit={handleRoundsSubmit}>
+                <input
+                  autoFocus
+                  type="text"
+                  value={roundsInput}
+                  onChange={handleRoundsChange}
+                  onBlur={handleRoundsBlur}
+                  pattern="[0-9]*"
+                  className="w-20 bg-transparent text-right border border-[#555555] text-[#555555] text-xl font-bold focus:outline-none px-1 rounded"
+                />
+              </form>
+            ) : (
+              <span 
+                className="text-[#555555] text-xl font-bold cursor-pointer" 
+                onClick={handleRoundsClick}
+              >
+                {iterations}X
+              </span>
+            )}
           </div>
         </div>
       </div>
