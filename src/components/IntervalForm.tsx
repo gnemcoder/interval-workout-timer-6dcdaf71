@@ -1,6 +1,8 @@
+
 import React, { useState, useEffect } from 'react';
-import { Play } from "lucide-react";
+import { Play, Circle, RefreshCcw } from "lucide-react";
 import { Button } from "@/components/ui/button";
+import { Input } from "@/components/ui/input";
 
 interface IntervalFormProps {
   onStart: (runMinutes: number, restMinutes: number, iterations: number) => void;
@@ -23,8 +25,8 @@ const parseTime = (timeStr: string): number => {
 
 const IntervalForm: React.FC<IntervalFormProps> = ({ onStart }) => {
   const [runTimeStr, setRunTimeStr] = useState('05:00');
-  const [restTimeStr, setRestTimeStr] = useState('02:30');
-  const [roundsStr, setRoundsStr] = useState('3');
+  const [restTimeStr, setRestTimeStr] = useState('02:00');
+  const [roundsStr, setRoundsStr] = useState('5');
   
   const [runTime, setRunTime] = useState(parseTime(runTimeStr));
   const [restTime, setRestTime] = useState(parseTime(restTimeStr));
@@ -79,44 +81,51 @@ const IntervalForm: React.FC<IntervalFormProps> = ({ onStart }) => {
       </div>
       
       <div className="space-y-4">
-        <div>
-          <label className="block text-spotify-lightgray text-sm font-bold mb-2">
-            Work Interval (mm:ss):
-          </label>
+        {/* Work Interval Box */}
+        <div className="flex items-center justify-between bg-white/10 rounded-full p-4">
+          <div className="flex items-center gap-4">
+            <div className="bg-white/10 rounded-full p-3">
+              <Play className="w-6 h-6 text-gray-500" />
+            </div>
+            <span className="text-white text-xl font-medium">Work</span>
+          </div>
           <input
             type="text"
             value={runTimeStr}
             onChange={handleRunTimeChange}
-            placeholder="05:00"
-            pattern="[0-9]{2}:[0-9]{2}"
-            className="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline bg-spotify-darkgray text-white"
+            className="bg-transparent border-none text-right text-white text-2xl font-bold focus:outline-none w-24"
           />
         </div>
         
-        <div>
-          <label className="block text-spotify-lightgray text-sm font-bold mb-2">
-            Rest Interval (mm:ss):
-          </label>
+        {/* Rest Interval Box */}
+        <div className="flex items-center justify-between bg-white/10 rounded-full p-4">
+          <div className="flex items-center gap-4">
+            <div className="bg-white/10 rounded-full p-3">
+              <Circle className="w-6 h-6 text-gray-500" />
+            </div>
+            <span className="text-white text-xl font-medium">Rest</span>
+          </div>
           <input
             type="text"
             value={restTimeStr}
             onChange={handleRestTimeChange}
-            placeholder="02:30"
-            pattern="[0-9]{2}:[0-9]{2}"
-            className="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline bg-spotify-darkgray text-white"
+            className="bg-transparent border-none text-right text-white text-2xl font-bold focus:outline-none w-24"
           />
         </div>
         
-        <div>
-          <label className="block text-spotify-lightgray text-sm font-bold mb-2">
-            Rounds:
-          </label>
+        {/* Rounds Box */}
+        <div className="flex items-center justify-between bg-white/10 rounded-full p-4">
+          <div className="flex items-center gap-4">
+            <div className="bg-white/10 rounded-full p-3">
+              <RefreshCcw className="w-6 h-6 text-gray-500" />
+            </div>
+            <span className="text-white text-xl font-medium">Rounds</span>
+          </div>
           <input
-            type="number"
+            type="text"
             value={roundsStr}
             onChange={handleRoundsChange}
-            placeholder="3"
-            className="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline bg-spotify-darkgray text-white"
+            className="bg-transparent border-none text-right text-white text-2xl font-bold focus:outline-none w-24"
           />
         </div>
       </div>
