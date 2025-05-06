@@ -1,6 +1,6 @@
 
-import React from 'react';
-import { Play, Pause, Square, SkipForward } from 'lucide-react';
+import React, { useState, useRef, useEffect } from 'react';
+import { Play, Pause, Square, SkipForward, Clock } from 'lucide-react';
 import { Button } from "@/components/ui/button";
 
 interface TimerDisplayProps {
@@ -30,11 +30,62 @@ const TimerDisplay: React.FC<TimerDisplayProps> = ({
   adjustTime,
   isRest
 }) => {
+  const [isEditing, setIsEditing] = useState(false);
+  const [editValue, setEditValue] = useState(formatTime(timeLeft));
+  const inputRef = useRef<HTMLInputElement>(null);
+
   // Calculate progress percentage for the circular timer
   const progress = (timeLeft / initialSeconds) * 100;
   const circumference = 2 * Math.PI * 120; // Circle radius is 120px
   const dashOffset = circumference * (1 - progress / 100);
   const activeColor = isRest ? "#B3B3B3" : "#1DB954"; // Spotify gray for rest, Spotify green for run
+  
+  useEffect(() => {
+    if (!isEditing) {
+      setEditValue(formatTime(timeLeft));
+    }
+  }, [timeLeft, isEditing]);
+
+  useEffect(() => {
+    if (isEditing && inputRef.current) {
+      inputRef.current.focus();
+      inputRef.current.select();
+    }
+  }, [isEditing]);
+
+  const handleTimeClick = () => {
+    if (isPaused) {
+      setIsEditing(true);
+    }
+  };
+
+  const handleTimeChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    setEditValue(e.target.value);
+  };
+
+  const handleTimeSubmit = (e: React.FormEvent) => {
+    e.preventDefault();
+    
+    // Parse the time value
+    const [minutesStr, secondsStr] = editValue.split(':');
+    const minutes = parseInt(minutesStr, 10) || 0;
+    const seconds = parseInt(secondsStr, 10) || 0;
+    const totalSeconds = minutes * 60 + seconds;
+    
+    // Calculate difference with current time
+    const difference = totalSeconds - timeLeft;
+    
+    // Apply adjustment
+    if (difference !== 0) {
+      adjustTime(difference);
+    }
+    
+    setIsEditing(false);
+  };
+
+  const handleBlur = () => {
+    handleTimeSubmit({ preventDefault: () => {} } as React.FormEvent);
+  };
   
   return (
     <div className="flex flex-col items-center">
@@ -62,17 +113,36 @@ const TimerDisplay: React.FC<TimerDisplayProps> = ({
             transform="rotate(-90 128 128)"
             className="transition-all duration-300"
           />
-          <text 
-            x="50%" 
-            y="50%" 
-            textAnchor="middle" 
-            dy=".3em" 
-            fontSize="60"
-            fill="white"
-            fontWeight="bold"
-          >
-            {formatTime(timeLeft)}
-          </text>
+          {!isEditing ? (
+            <text 
+              x="50%" 
+              y="50%" 
+              textAnchor="middle" 
+              dy=".3em" 
+              fontSize="60"
+              fill="white"
+              fontWeight="bold"
+              cursor={isPaused ? "pointer" : "default"}
+              onClick={handleTimeClick}
+            >
+              {formatTime(timeLeft)}
+            </text>
+          ) : (
+            <foreignObject x="50" y="90" width="156" height="80">
+              <form onSubmit={handleTimeSubmit}>
+                <input
+                  ref={inputRef}
+                  type="text"
+                  value={editValue}
+                  onChange={handleTimeChange}
+                  onBlur={handleBlur}
+                  pattern="[0-9]{2}:[0-9]{2}"
+                  className="w-full h-full bg-transparent text-center text-white text-5xl font-bold border-none outline-none focus:ring-2 focus:ring-spotify-green"
+                  style={{ background: 'rgba(0,0,0,0.3)' }}
+                />
+              </form>
+            </foreignObject>
+          )}
         </svg>
       </div>
       
