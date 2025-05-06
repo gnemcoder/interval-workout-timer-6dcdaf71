@@ -1,5 +1,6 @@
+
 import React, { useState, useEffect } from 'react';
-import { Play } from "lucide-react";
+import { Play, Circle, RotateCcw } from "lucide-react";
 import { Button } from "@/components/ui/button";
 
 interface IntervalFormProps {
@@ -23,8 +24,8 @@ const parseTime = (timeStr: string): number => {
 
 const IntervalForm: React.FC<IntervalFormProps> = ({ onStart }) => {
   const [runTimeStr, setRunTimeStr] = useState('05:00');
-  const [restTimeStr, setRestTimeStr] = useState('02:30');
-  const [roundsStr, setRoundsStr] = useState('3');
+  const [restTimeStr, setRestTimeStr] = useState('02:00');
+  const [roundsStr, setRoundsStr] = useState('5');
   
   const [runTime, setRunTime] = useState(parseTime(runTimeStr));
   const [restTime, setRestTime] = useState(parseTime(restTimeStr));
@@ -44,6 +45,16 @@ const IntervalForm: React.FC<IntervalFormProps> = ({ onStart }) => {
   
   const handleStart = () => {
     onStart(runTime, restTime, rounds);
+  };
+
+  const handleFormSubmit = (e: React.FormEvent) => {
+    e.preventDefault();
+    // Prevent page refresh but don't do anything else
+    // This prevents the form from submitting and refreshing the page
+  };
+
+  const handleInputFocus = (e: React.FocusEvent<HTMLInputElement>) => {
+    e.target.select();
   };
 
   const handleRunTimeChange = (e: React.ChangeEvent<HTMLInputElement>) => {
@@ -78,48 +89,58 @@ const IntervalForm: React.FC<IntervalFormProps> = ({ onStart }) => {
         </Button>
       </div>
       
-      <div className="space-y-4">
-        <div>
-          <label className="block text-spotify-lightgray text-sm font-bold mb-2">
-            Work Interval (mm:ss):
-          </label>
+      <form onSubmit={handleFormSubmit} className="space-y-6">
+        {/* Work Interval Box */}
+        <div className="bg-gray-100 rounded-3xl p-4 flex items-center justify-between shadow-sm">
+          <div className="flex items-center gap-4">
+            <div className="bg-gray-200 rounded-full p-4 flex items-center justify-center w-14 h-14">
+              <Play size={24} className="text-gray-600" />
+            </div>
+            <span className="text-xl font-medium text-gray-800">Work</span>
+          </div>
           <input
             type="text"
             value={runTimeStr}
             onChange={handleRunTimeChange}
-            placeholder="05:00"
-            pattern="[0-9]{2}:[0-9]{2}"
-            className="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline bg-spotify-darkgray text-white"
+            onFocus={handleInputFocus}
+            className="bg-transparent text-right text-2xl font-semibold text-gray-800 w-28 outline-none"
           />
         </div>
         
-        <div>
-          <label className="block text-spotify-lightgray text-sm font-bold mb-2">
-            Rest Interval (mm:ss):
-          </label>
+        {/* Rest Interval Box */}
+        <div className="bg-gray-100 rounded-3xl p-4 flex items-center justify-between shadow-sm">
+          <div className="flex items-center gap-4">
+            <div className="bg-gray-200 rounded-full p-4 flex items-center justify-center w-14 h-14">
+              <Circle size={24} className="text-gray-600" />
+            </div>
+            <span className="text-xl font-medium text-gray-800">Rest</span>
+          </div>
           <input
             type="text"
             value={restTimeStr}
             onChange={handleRestTimeChange}
-            placeholder="02:30"
-            pattern="[0-9]{2}:[0-9]{2}"
-            className="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline bg-spotify-darkgray text-white"
+            onFocus={handleInputFocus}
+            className="bg-transparent text-right text-2xl font-semibold text-gray-800 w-28 outline-none"
           />
         </div>
         
-        <div>
-          <label className="block text-spotify-lightgray text-sm font-bold mb-2">
-            Rounds:
-          </label>
+        {/* Rounds Box */}
+        <div className="bg-gray-100 rounded-3xl p-4 flex items-center justify-between shadow-sm">
+          <div className="flex items-center gap-4">
+            <div className="bg-gray-200 rounded-full p-4 flex items-center justify-center w-14 h-14">
+              <RotateCcw size={24} className="text-gray-600" />
+            </div>
+            <span className="text-xl font-medium text-gray-800">Rounds</span>
+          </div>
           <input
-            type="number"
+            type="text"
             value={roundsStr}
             onChange={handleRoundsChange}
-            placeholder="3"
-            className="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline bg-spotify-darkgray text-white"
+            onFocus={handleInputFocus}
+            className="bg-transparent text-right text-2xl font-semibold text-gray-800 w-28 outline-none"
           />
         </div>
-      </div>
+      </form>
     </div>
   );
 };
