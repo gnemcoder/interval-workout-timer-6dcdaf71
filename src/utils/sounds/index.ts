@@ -1,36 +1,25 @@
 
 // Main sound effects management and public API
-import { 
-  BEEP_SOUND_URL, 
-  WORK_STARTED_SOUND_URL, 
-  REST_STARTED_SOUND_URL
-} from './constants';
+import { BEEP_SOUND_URL } from './constants';
 import { initAudioContext } from './audioContext';
 import { createSoundWithFallback } from './soundCreation';
-import { 
-  setSoundInstances, 
-  playBeepSound, 
-  playWorkStartedSound, 
-  playRestStartedSound 
-} from './soundPlayers';
+import { setSoundInstances, playBeepSound } from './soundPlayers';
 
 /**
- * Initialize all sound effects
+ * Initialize sound effects - simplified to only handle beep2.mp3
  */
 export const initSounds = (): void => {
   try {
     // Initialize Web Audio API
     initAudioContext();
     
-    // Create the sound instances
+    // Create the beep sound instance
     const beepSound = createSoundWithFallback(BEEP_SOUND_URL);
-    const workSound = createSoundWithFallback(WORK_STARTED_SOUND_URL);
-    const restSound = createSoundWithFallback(REST_STARTED_SOUND_URL);
     
-    // Set sound instances for players
-    setSoundInstances(beepSound, workSound, restSound);
+    // Set sound instance for player
+    setSoundInstances(beepSound);
     
-    console.log('Sound effects initialized with Supabase sounds');
+    console.log('Sound effect initialized with beep2.mp3');
     
     // Add one-time play attempt to handle user interaction requirement
     document.addEventListener('click', function initialInteraction() {
@@ -50,5 +39,5 @@ export const initSounds = (): void => {
   }
 };
 
-// Export the public sound player functions
-export { playBeepSound, playWorkStartedSound, playRestStartedSound };
+// Export the public sound player function
+export { playBeepSound };

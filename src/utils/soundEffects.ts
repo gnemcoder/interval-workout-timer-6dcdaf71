@@ -1,11 +1,13 @@
 
 /**
- * Re-export from the new sound modules structure for backward compatibility
+ * Simplified sound effects module that just exports the beep sound
  * This file serves as a compatibility layer for code that uses the old import path
  */
 export {
   initSounds,
-  playBeepSound,
-  playWorkStartedSound,
-  playRestStartedSound
+  playBeepSound
 } from './sounds';
+
+// Define empty functions for backward compatibility
+export const playWorkStartedSound = (): void => {};
+export const playRestStartedSound = (): void => {};

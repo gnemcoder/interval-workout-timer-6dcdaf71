@@ -1,5 +1,6 @@
+
 import { useState, useRef, useEffect } from 'react';
-import { playBeepSound, playWorkStartedSound, playRestStartedSound } from '../../utils/sounds';
+import { playBeepSound } from '../../utils/sounds';
 
 interface UseTimerLogicProps {
   initialSeconds: number;
@@ -27,19 +28,6 @@ export const useTimerLogic = ({
   // Reset timer when initialSeconds changes (switching between run/rest)
   useEffect(() => {
     setTimeLeft(initialSeconds);
-    
-    // Play the appropriate sound when switching between work and rest, but not on initial render
-    if (!initialRenderRef.current) {
-      if (isRest) {
-        console.log("Playing rest started sound");
-        playRestStartedSound();
-      } else {
-        console.log("Playing work started sound");
-        playWorkStartedSound();
-      }
-    } else {
-      console.log("Initial render - not playing sounds");
-    }
     initialRenderRef.current = false;
   }, [initialSeconds, isRest]);
 
