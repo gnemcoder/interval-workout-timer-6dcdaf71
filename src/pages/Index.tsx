@@ -37,7 +37,61 @@ const Index = () => {
 
   // Initialize sounds when component mounts
   useEffect(() => {
-    initSounds();
+    // Initialize sound system with mobile optimizations
+    const setupSounds = async () => {
+      try {
+        await initSounds();
+        console.log('Sound system initialized successfully');
+        
+        // Attempt to play a silent sound on first user interaction
+        const handleFirstInteraction = () => {
+          // Create and play a silent sound to unlock audio on iOS
+          const silentSound = new Audio("data:audio/mp3;base64,SUQzBAAAAAAAI1RTU0UAAAAPAAADTGF2ZjU4Ljc2LjEwMAAAAAAAAAAAAAAA/+M4wAAAAAAAAAAAAEluZm8AAAAPAAAAAwAAAFgAD///////////////////////////////////////////////////////////////AAAAAExhdmM1OC4xMwAAAAAAAAAAAAAAACQCkAAAAAAAAABYw5duImfIAAAAAAAAAAAAAAAAAAAA");
+          silentSound.volume = 0.01;
+          
+          // These properties are critical for iOS audio mixing
+          silentSound.setAttribute('playsinline', '');
+          silentSound.setAttribute('webkit-playsinline', '');
+          
+          silentSound.play().then(() => {
+            console.log('Silent sound played successfully - audio unlocked');
+          }).catch(e => {
+            console.warn('Could not play silent sound:', e);
+          });
+          
+          // Remove the listeners after first interaction
+          ['touchstart', 'touchend', 'click', 'keydown'].forEach(event => {
+            document.removeEventListener(event, handleFirstInteraction);
+          });
+        };
+        
+        // Add listeners for first user interaction
+        ['touchstart', 'touchend', 'click', 'keydown'].forEach(event => {
+          document.addEventListener(event, handleFirstInteraction, { once: true });
+        });
+      } catch (error) {
+        console.error('Failed to initialize sound system:', error);
+      }
+    };
+    
+    setupSounds();
+    
+    // Setup visibility change handler for iOS background mode
+    const handleVisibilityChange = () => {
+      if (document.visibilityState === 'visible') {
+        console.log('App became visible, reinitializing sounds...');
+        setupSounds();
+      }
+    };
+    
+    document.addEventListener('visibilitychange', handleVisibilityChange);
+    
+    return () => {
+      document.removeEventListener('visibilitychange', handleVisibilityChange);
+      ['touchstart', 'touchend', 'click', 'keydown'].forEach(event => {
+        document.removeEventListener(event, () => {});
+      });
+    };
   }, []);
 
   // Fetch user's last session settings

@@ -1,6 +1,6 @@
 
 /**
- * Simplified sound effects module that just exports the beep sound
+ * Simplified sound effects module with enhanced mobile support
  * This file serves as a compatibility layer for code that uses the old import path
  */
 export {

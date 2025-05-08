@@ -24,12 +24,31 @@ export const useTimerLogic = ({
   const [timeLeft, setTimeLeft] = useState(initialSeconds);
   const intervalRef = useRef<number | null>(null);
   const initialRenderRef = useRef(true);
+  
+  // Track the last beep time to prevent too frequent beeps
+  const lastBeepTimeRef = useRef<number>(0);
 
   // Reset timer when initialSeconds changes (switching between run/rest)
   useEffect(() => {
     setTimeLeft(initialSeconds);
     initialRenderRef.current = false;
   }, [initialSeconds, isRest]);
+
+  // Set up visibility change detection to handle app going to background
+  useEffect(() => {
+    const handleVisibilityChange = () => {
+      if (document.visibilityState === 'visible' && isRunning && !isPaused) {
+        // When coming back to foreground, we might need to recalculate timeLeft
+        console.log('App visibility changed to visible, checking timer');
+      }
+    };
+    
+    document.addEventListener('visibilitychange', handleVisibilityChange);
+    
+    return () => {
+      document.removeEventListener('visibilitychange', handleVisibilityChange);
+    };
+  }, [isRunning, isPaused]);
 
   useEffect(() => {
     // Clear any existing interval first
@@ -43,22 +62,34 @@ export const useTimerLogic = ({
       
       intervalRef.current = window.setInterval(() => {
         setTimeLeft((prevTime) => {
-          // Play countdown sounds in the last 3 seconds
-          if (prevTime <= 4 && prevTime > 1) {
+          // Play countdown sounds in the last 3 seconds, with rate limiting
+          const now = Date.now();
+          if (prevTime <= 4 && prevTime > 1 && (now - lastBeepTimeRef.current > 900)) {
             // Only play sounds for the last 3 seconds (3, 2, 1)
             console.log(`Countdown: ${prevTime-1}s remaining`);
-            playBeepSound();
+            lastBeepTimeRef.current = now;
+            
+            // Use setTimeout to avoid blocking the timer update
+            setTimeout(() => {
+              playBeepSound();
+            }, 10);
           }
           
           if (prevTime <= 1) {
             clearInterval(intervalRef.current!);
-            // Final beep for interval completion
+            // Final beep for interval completion, slightly delayed
             console.log("Interval complete, playing final beep");
-            playBeepSound();
+            
+            // Use setTimeout to ensure the beep happens after UI updates
             setTimeout(() => {
-              console.log("Calling onComplete callback");
-              onComplete();
-            }, 1000);
+              playBeepSound();
+              
+              // Small delay before calling onComplete to ensure sound plays
+              setTimeout(() => {
+                console.log("Calling onComplete callback");
+                onComplete();
+              }, 200);
+            }, 50);
             return 0;
           }
           
@@ -77,7 +108,7 @@ export const useTimerLogic = ({
         clearInterval(intervalRef.current);
       }
     };
-  }, [isRunning, isPaused, onComplete, onTimeUpdate]);
+  }, [isRunning, isPaused, onComplete, onTimeUpdate, isRest]);
 
   const adjustTime = (seconds: number) => {
     if (!isRunning || isPaused) return;
