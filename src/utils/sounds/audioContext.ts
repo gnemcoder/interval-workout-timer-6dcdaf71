@@ -1,4 +1,3 @@
-
 // Audio context management for better cross-platform compatibility
 // Especially focused on iOS Safari support
 
@@ -25,7 +24,7 @@ export const initAudioContext = (): void => {
         
         // Critical for iOS - need user interaction to start audio context
         const unlockAudioContext = () => {
-          if (audioContext && (audioContext.state === 'suspended' || audioContext.state === 'interrupted')) {
+          if (audioContext && (audioContext.state === 'suspended' || audioContext.state === 'closed')) {
             audioContext.resume().then(() => {
               console.log('AudioContext resumed successfully');
               
@@ -46,7 +45,7 @@ export const initAudioContext = (): void => {
                 silenceSound.loop = true; // Keep it looping to maintain the audio session
                 
                 // Critical properties to allow background audio and mixing
-                silenceSound.playsInline = true;
+                silenceSound.setAttribute('playsinline', '');
                 (silenceSound as any).webkitPreservesPitch = false;
                 
                 // The purpose is to initialize the audio session properly
